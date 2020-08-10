@@ -8,6 +8,7 @@ const place = (placement) => {
     console.log(placement)
     if (placement.direction != inside)
         let row = get_new_row()
+    // test
     switch (placement.direction) {
         case "over":
             break;
