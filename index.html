@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag&Drop v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        .wrapper {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wrapper__left {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: start center;
+        }
+
+        .wrapper__right {
+            width: 500px;
+            height: 100%;
+            background-color: #2F4050;
+
+        }
+
+        .left__toolbar {
+            position: absolute;
+            width: 40%;
+            height: 250px;
+            bottom: -220px;
+            left: 0;
+            transition: bottom 0.5s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .left__toolbar--open {
+            bottom: 0;
+        }
+
+        .toolbar__button {
+            width: 120px;
+            background-color: #2F4050;
+
+            height: 30px;
+            line-height: 30px;
+            font-size: 20px;
+            text-align: center;
+            color: white;
+            border-top-right-radius: 10px;
+            cursor: pointer;
+        }
+
+        .toolbar__tools {
+            padding: 15px;
+            width: 100%;
+            background-color: #2F4050;
+            height: 220px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 15px;
+            border-top-right-radius: 10px;
+        }
+
+        .draggable_item {
+            border: 1px solid white;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .popup_container {
+            box-sizing: content-box;
+            width: 600px;
+            height: 600px;
+            border: 1px solid blue;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="wrapper__left">
+            <popup-container id="popup" class="popup_container"></popup-container>
+            <div id="toolbar" class="left__toolbar">
+                <p id="open_toolbar_button" class="toolbar__button">
+                    Narzędzia
+                </p>
+                <div id="tools" class="toolbar__tools">
+
+                </div>
+            </div>
+        </div>
+        <div class="wrapper__right">
+
+        </div>
+    </div>
+    <template class="template">
+        <p>
+            Asd
+        </p>
+    </template>
+    <template class="template">
+        <p>
+            Asd
+        </p>
+    </template>
+    <template class="template">
+        <p>
+            Asd
+        </p>
+    </template>
+    <template class="template">
+        <p>
+            Asd
+        </p>
+    </template>
+    <template class="template">
+        <p>
+            Asd
+        </p>
+    </template>
+    <script src="app.js"></script>
+</body>
+
+</html>
