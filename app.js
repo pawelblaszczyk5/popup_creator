@@ -40,22 +40,19 @@ const place_placeholder = (placement) => {
     switch (placement.direction) {
         case "over":
             content.insertBefore(row, placement.element)
-            break;
+            break
         case "inside":
             if (placement.direction_inside == "right")
                 placement.element.insertBefore(div, placement.closest.nextElementSibling)
             else
                 placement.element.insertBefore(div, placement.closest)
-            break;
+            break
         case "under":
             content.insertBefore(row, placement.element.nextElementSibling)
-            break;
-        case "top":
-            content.insertBefore(row, content.firstElementChild)
-            break;
-        case "bottom":
+            break
+        case "in":
             content.appendChild(row)
-            break;
+            break
     }
 }
 // calculate where item will be placed while moving it
@@ -64,50 +61,44 @@ const calculate_placement = (x, y) => {
     let content = shadowRoot.getElementById("content")
     let hovered_items = shadowRoot.querySelectorAll(':hover')
     if (hovered_items.length > 0) {
-        let height = 0
-        for (let element of content.children) {
-            if (y > element.getBoundingClientRect().top - parseInt(window.getComputedStyle(element).marginTop) && y < element.getBoundingClientRect().top + element.getBoundingClientRect().height + parseInt(window.getComputedStyle(element).marginBottom)) {
-                let element_height = element.getBoundingClientRect().height + parseInt(window.getComputedStyle(element).marginTop) + parseInt(window.getComputedStyle(element).marginBottom)
-                let y_offset = y - element.getBoundingClientRect().top + parseInt(window.getComputedStyle(element).marginTop)
-                if (y_offset < 0.33 * element_height) {
-                    return ({
-                        direction: "over",
-                        element: element
-                    })
-                } else if (y_offset < 0.66 * element_height) {
-                    let elements_x = Array.from(element.children)
-                    let closest = elements_x.reduce(function (prev, curr) {
-                        return (Math.abs(curr.getBoundingClientRect().x - x) < Math.abs(prev.getBoundingClientRect().x - x) ? curr : prev);
-                    });
-                    if (closest.id != "placeholder") {
-                        let direction_inside
-                        if (x > closest.getBoundingClientRect().x)
-                            direction_inside = "right"
-                        else
-                            direction_inside = "left"
-                        return ({
-                            direction: "inside",
-                            element: element,
-                            closest: closest,
-                            direction_inside: direction_inside
-                        })
-                    } else
-                        return null
-                } else {
-                    return ({
-                        direction: "under",
-                        element: element
-                    })
-                }
-            }
-        }
-        if (y < content.children[0].getBoundingClientRect().top) {
-            return ({
-                direction: "top"
+        let elements_y = Array.from(content.children)
+        if (elements_y.length != 0) {
+            let closest_y = elements_y.reduce(function (prev, curr) {
+                return (Math.abs((curr.getBoundingClientRect().y + (curr.getBoundingClientRect().height / 2)) - y) < Math.abs((prev.getBoundingClientRect().y + (prev.getBoundingClientRect().height / 2)) - y) ? curr : prev)
             })
+            if (y < closest_y.getBoundingClientRect().y + (closest_y.getBoundingClientRect().height / 4))
+                return ({
+                    direction: "over",
+                    element: closest_y
+                })
+            else if (y > closest_y.getBoundingClientRect().y + ((closest_y.getBoundingClientRect().height / 4) * 3)) {
+                return ({
+                    direction: "under",
+                    element: closest_y
+                })
+            } else {
+                let elements_x = Array.from(closest_y.children)
+                let closest = elements_x.reduce(function (prev, curr) {
+                    return (Math.abs((curr.getBoundingClientRect().x + (curr.getBoundingClientRect().width / 2)) - x) < Math.abs((prev.getBoundingClientRect().x + (prev.getBoundingClientRect().width / 2)) - x) ? curr : prev)
+                })
+                if (closest.id != "placeholder") {
+                    let direction_inside
+                    if (x > (closest.getBoundingClientRect().x + (closest.getBoundingClientRect().width / 2)))
+                        direction_inside = "right"
+                    else
+                        direction_inside = "left"
+                    return ({
+                        direction: "inside",
+                        element: closest_y,
+                        closest: closest,
+                        direction_inside: direction_inside
+                    })
+                } else
+                    return null
+            }
         } else {
             return ({
-                direction: "bottom"
+                direction: "in"
             })
         }
     }
@@ -186,7 +177,18 @@ const initialize = () => {
         else
             toolbar.classList.add("left__toolbar--open")
     })
-
+    // toggle settings panels
+    document.getElementById("global_settings").style.display = "flex"
+    for (let element of document.getElementsByClassName("panel__mark")) {
+        element.addEventListener("click", function () {
+            if (!this.classList.contains("panel__mark--clicked")) {
+                document.getElementById(document.getElementsByClassName("panel__mark--clicked")[0].getAttribute("data-which_panel")).style.display = "none"
+                document.getElementsByClassName("panel__mark--clicked")[0].classList.remove("panel__mark--clicked")
+                this.classList.add("panel__mark--clicked")
+                document.getElementById(this.getAttribute("data-which_panel")).style.display = "flex"
+            }
+        })
+    }
     // create shadow dom and give it basic styles
     class Popup extends HTMLElement {
         constructor() {
@@ -233,24 +235,6 @@ const initialize = () => {
             content.classList.add("content")
             content.id = "content"
             wrapper.appendChild(content)
-            let row = document.createElement("div")
-            row.classList.add("row")
-            content.appendChild(row)
-            let div = document.createElement("div")
-            div.style.border = "1px solid blue"
-            div.style.width = "50px"
-            div.style.height = "50px"
-            row.appendChild(div)
-            let div2 = document.createElement("div")
-            div2.style.border = "1px solid blue"
-            div2.style.width = "50px"
-            div2.style.height = "50px"
-            row.appendChild(div2)
-            let div3 = document.createElement("div")
-            div3.style.border = "1px solid blue"
-            div3.style.width = "50px"
-            div3.style.height = "50px"
-            row.appendChild(div3)
             document.getElementById("popup").setAttribute("data-row_counter", this.shadowRoot.querySelectorAll(".row").length)
         }
     }

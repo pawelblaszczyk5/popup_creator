@@ -41,7 +41,47 @@
             width: 500px;
             height: 100%;
             background-color: #2F4050;
+        }
 
+        .right__settings--panels {
+            height: 65px;
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: flex-end;
+        }
+
+        .panel__mark {
+            border: 2px solid white;
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+            width: 100%;
+            color: white;
+            display: grid;
+            height: 50px;
+            place-items: center;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .panel__mark--clicked {
+            height: 60px;
+            font-size: 15px;
+            border-bottom: 0;
+        }
+
+        .right__panels {
+            height: 100%;
+            position: relative;
+        }
+
+        .panel {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         .left__toolbar {
@@ -112,12 +152,30 @@
                     Elementy
                 </p>
                 <div id="tools" class="toolbar__tools">
-
                 </div>
             </div>
         </div>
         <div class="wrapper__right">
-
+            <div class="right__settings--panels">
+                <div data-which_panel="element_settings" class="panel__mark">
+                    Ustawienia elementu
+                </div>
+                <div data-which_panel="inputs_settings" class="panel__mark">
+                    Ustawienia inputów
+                </div>
+                <div data-which_panel="row_settings" class="panel__mark">
+                    Ustawienia rzędu
+                </div>
+                <div data-which_panel="global_settings" class="panel__mark panel__mark--clicked">
+                    Ustawienia popupu
+                </div>
+            </div>
+            <div class="right__panels">
+                <div id="element_settings" class="panel">asd</div>
+                <div id="inputs_settings" class="panel">xd</div>
+                <div id="row_settings" class="panel">cd</div>
+                <div id="global_settings" class="panel">asd</div>
+            </div>
         </div>
     </div>
     <template class="template" id="template_1">
