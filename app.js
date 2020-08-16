@@ -1,3 +1,11 @@
+jscolor.presets.default = {
+    format: 'rgba'
+}
+let settings = {
+    editing: null,
+    height: 600
+
+}
 const get_new_row = () => {
     let div = document.createElement("div")
     div.classList.add("row")
@@ -6,6 +14,12 @@ const get_new_row = () => {
     div.id = "row_" + number
     document.getElementById("popup").setAttribute("data-row_counter", number)
     return div
+}
+const clean_rows = () => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    for (let element of shadowRoot.querySelectorAll(".row"))
+        if (element.children.length == 0)
+            remove_item(element)
 }
 const get_placeholder = () => {
     let div = document.createElement("div")
@@ -17,6 +31,28 @@ const get_placeholder = () => {
 }
 const remove_item = (element) => {
     element.parentElement.removeChild(element)
+}
+const add_style = (style, value, selector) => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+
+    let selected_rule
+    for (let rule of shadowRoot.styleSheets[0].rules) {
+        if (rule.selectorText == "#" + selector) {
+            selected_rule = rule
+            break
+        }
+    }
+    if (selected_rule == null) {
+        shadowRoot.styleSheets[0].insertRule(`#${selector}{}`, shadowRoot.styleSheets[0].rules.length)
+        selected_rule = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
+    }
+    selected_rule.style[style] = value
+
+}
+const add_attribute = (attribute, value, element) => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    console.log(shadowRoot.styleSheets[0])
+
 }
 // function to place placeholder based on generated position and values
 const place_placeholder = (placement) => {
@@ -136,11 +172,17 @@ const drag = function (e) {
                 item_to_place = document.importNode(document.getElementById(what.getAttribute("data-template_id")).content, true)
                 item_to_place = item_to_place.children[0]
                 item_to_place.id = what.getAttribute("data-template_id") + "_" + what.getAttribute("data-template_counter")
+                item_to_place.classList.add(what.getAttribute("data-template_id"))
                 what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
+                item_to_place.addEventListener("click", function () {
+                    console.log(this)
+                })
+                // item_to_place.addEventListener("mousedown", drag)
             } else
-                item_to_place = element
+                item_to_place = what
             shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
             remove_item(shadowRoot.getElementById("placeholder"))
+            clean_rows()
         }
     }
     const move = function (e) {
@@ -177,6 +219,7 @@ const initialize = () => {
         else
             toolbar.classList.add("left__toolbar--open")
     })
+
     // toggle settings panels
     document.getElementById("global_settings").style.display = "flex"
     for (let element of document.getElementsByClassName("panel__mark")) {
@@ -189,6 +232,7 @@ const initialize = () => {
             }
         })
     }
+
     // create shadow dom and give it basic styles
     class Popup extends HTMLElement {
         constructor() {
@@ -203,41 +247,87 @@ const initialize = () => {
                     padding: 0;
                     box-sizing: border-box;
                 }
-                .wrapper{
+                #wrapper{
                     max-width: 600px;
                     min-width: 280px;
                     width: 100%;
                     height: 600px;
                 }
-                .content{
+                #content::before{
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    position: absolute;
+                    z-index: -5;
+                }
+                #content{
+                    position: relative;
                     width: 100%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    padding: 15px;
+                    background-repeat: no-repeat;
                 }
                 .row{
                     width: 100%;
                     display: flex;
                     flex-direction: row;
-                    height: 50px;
+                    min-height: 50px;
                     border: 1px solid red;
-                    margin-top: 10px;
                     justify-content: space-evenly;
+                }
+                .img img{
+                    display: block;
+                    width: 100%;
                 }
                 `;
             shadow.appendChild(style)
             let wrapper = document.createElement("div")
-            wrapper.classList.add("wrapper")
+            wrapper.id = "wrapper"
             shadow.appendChild(wrapper)
             let content = document.createElement("div")
-            content.classList.add("content")
             content.id = "content"
             wrapper.appendChild(content)
             document.getElementById("popup").setAttribute("data-row_counter", this.shadowRoot.querySelectorAll(".row").length)
+
         }
     }
     customElements.define('popup-container', Popup);
+    for (let element of document.getElementsByClassName("input--standard")) {
+        element.addEventListener("input", (e) => {
+            let input = e.target
+            let shadowRoot = document.getElementById("popup").shadowRoot
+            if (input.checkValidity()) {
+                let editing = input.getAttribute("data-editing") != "" ? input.getAttribute("data-editing") : settings.editing.id
+                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
+                switch (input.getAttribute("data-what")) {
+                    case "style":
+                        add_style(input.getAttribute("data-name"), value, editing)
+                        break
+                    case "attribute":
+                        break
+                }
+                if (editing = shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "maxWidth") {
+                    document.getElementById("popup").style.width = input.value + "px"
+                } else if (editing = shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
+                    document.getElementById("popup").style.height = input.value + "px"
+                }
+            }
+        })
+    }
+    for (let element of document.getElementsByClassName("input--filter")) {
+        element.addEventListener("input", (e) => {
+            let opacity = 100 - document.getElementById("bg_opacity").value
+            let grayscale = document.getElementById("bg_grayscale").value
+            let brightness = document.getElementById("bg_brightness").value
+            let blur = document.getElementById("bg_blur").value
+            let filter_string = `blur(${blur}px) grayscale(${grayscale}%) opacity(${opacity}%) brightness(${brightness}%)`
+            add_style("filter", filter_string, "content::before")
+        })
+    }
 }
 initialize()

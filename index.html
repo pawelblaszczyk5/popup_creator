@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drag&Drop v2</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="jscolor.js"></script>
     <style>
         * {
             margin: 0;
@@ -82,6 +83,46 @@
             left: 0;
             width: 100%;
             height: 100%;
+            padding: 15px;
+            flex-direction: column;
+        }
+
+        .label {
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .input {
+            padding: 5px;
+            margin-left: 10px;
+            width: 55%;
+            border: 1px solid black;
+        }
+
+        .label-text {
+            width: 40%;
+        }
+
+        .label-wrap {
+            flex-wrap: wrap;
+        }
+
+        .label-text--wider {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .input--narrow {
+            width: 20%;
+        }
+
+        .input--color,
+        .input--filter {
+            padding: 0;
+            height: 32px;
         }
 
         .left__toolbar {
@@ -174,19 +215,88 @@
                 <div id="element_settings" class="panel">asd</div>
                 <div id="inputs_settings" class="panel">xd</div>
                 <div id="row_settings" class="panel">cd</div>
-                <div id="global_settings" class="panel">asd</div>
+                <div id="global_settings" class="panel">
+                    <label class="label">
+                        <span class="label-text">Szerokość popupa</span>
+                        <input class="input input--standard" data-editing="wrapper" data-what="style" data-suffix="px"
+                            data-name="maxWidth" type="number" min="280" max="1200" value="600">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wysokość popupa</span>
+                        <input class="input input--standard" data-editing="wrapper" data-what="style" data-suffix="px"
+                            data-name="height" type="number" max="650" min="300" value="600">
+                    </label>
+                    <label class="label label-wrap">
+                        <span class="label-text label-text--wider">
+                            Paddingi
+                        </span>
+                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="0">
+                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="0">
+                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="0">
+                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="0">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wyrównanie w pionie</span>
+                        <select class="input input--standard" data-editing="content" data-what="style"
+                            data-name="justify-content">
+                            <option value="flex-start">Do początku</option>
+                            <option value="center">Wyśrodkuj</option>
+                            <option value="flex-end">Do końca</option>
+                            <option value="space-evenly">Wyrównaj</option>
+                            <option value="space-between">Rozłóż</option>
+                        </select>
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Kolor tła</span>
+                        <input class="input input--standard input--color" data-editing="content::before"
+                            data-what="style" data-name="backgroundColor" data-jscolor="">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Obrazek w tle</span>
+                        <input class="input input--standard" data-editing="content::before" data-what="style"
+                            data-prefix="url('" data-suffix="')" data-name="backgroundImage" type="text">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wypełnienienie tła</span>
+                        <select class="input input--standard" data-editing="content::before" data-what="style"
+                            data-name="backgroundSize">
+                            <option value="auto">Domyślne</option>
+                            <option value="contain">Dopasuj</option>
+                            <option value="cover">Wypełnij</option>
+                        </select>
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Rozmycie tła</span>
+                        <input id="bg_blur" type="range" min="0" max="20" class="input input--filter" value="0">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Jasność tła</span>
+                        <input id="bg_brightness" type="range" min="25" max="175" class="input input--filter"
+                            value="100">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Przeźroczystość tła</span>
+                        <input id="bg_opacity" type="range" min="0" max="100" class="input input--filter" value="0">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wyszarzenie tła</span>
+                        <input id="bg_grayscale" type="range" min="0" max="100" class="input input--filter" value="0">
+                    </label>
+                </div>
             </div>
         </div>
     </div>
-    <template class="template" id="template_1">
-        <p>
-            Test 1
-        </p>
+    <template class="template" id="p">
+        <p>Lorem Ipsum</p>
     </template>
-    <template class="template" id="template_2">
-        <p>
-            Test 2
-        </p>
+    <template class="template" id="img">
+        <div>
+            <img src="https://www.w3schools.com/w3css/img_lights.jpg">
+        </div>
     </template>
     <template class="template" id="template_3">
         <p>
