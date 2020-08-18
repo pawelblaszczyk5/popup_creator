@@ -333,7 +333,7 @@ initialize();
 (function () {
     document.execCommand("styleWithCSS", false, true)
     let wysiwyg = document.getElementById("wysiwyg_content")
-    wysiwyg.addEventListener("input", (e) => {
+    wysiwyg.addEventListener("input", () => {
         if (wysiwyg.textContent.length == 0)
             document.execCommand("fontSize", false, "1")
         const change_font = () => {
@@ -343,7 +343,6 @@ initialize();
                     fontElements.style.fontSize = document.getElementById("select_fontsize").value + "rem"
                 else
                     fontElements.style.fontSize = 16 + "rem"
-
             }
             wysiwyg.removeEventListener("input", change_font)
         }
@@ -355,13 +354,11 @@ initialize();
         document.execCommand("bold", false, true)
         wysiwyg.focus()
     })
-
     document.getElementById("btn_italic").addEventListener("click", () => {
         wysiwyg.focus()
         document.execCommand("italic", false, true)
         wysiwyg.focus()
     })
-
     document.getElementById("select_fontsize").addEventListener("input", (e) => {
         if (e.target.value != "none") {
             wysiwyg.focus()
