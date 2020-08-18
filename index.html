@@ -19,6 +19,10 @@
             overflow: hidden;
         }
 
+        html {
+            font-size: 1px;
+        }
+
         .wrapper {
             overflow: hidden;
             width: 100vw;
@@ -92,6 +96,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
+            font-size: 16px;
             align-items: flex-start;
         }
 
@@ -136,11 +141,13 @@
         }
 
         .wysiwyg_settings {
-            height: 60px;
+            height: 70px;
             display: flex;
             flex-direction: row;
             align-content: flex-start;
             flex-wrap: wrap;
+            padding: 5px;
+            border-bottom: 1px solid black;
         }
 
         .wysiwyg_button {
@@ -148,11 +155,28 @@
             width: 30px;
             border: none;
             border-radius: 0;
-
+            border: 1px solid black;
+            margin: 0 2px;
         }
 
         .wysiwyg_content {
-            height: calc(100% - 60px)
+            font-size: 1px;
+            font-size: 16rem;
+            height: calc(100% - 70px);
+            padding: 3px;
+        }
+
+        .wysiwyg_content ul {
+            list-style-position: inside;
+        }
+
+        .wysiwyg_content ol {
+            list-style-position: inside;
+        }
+
+        .wysiwyg_select {
+            border: 1px solid black;
+            margin: 0 2px;
         }
 
         .left__toolbar {
@@ -247,8 +271,29 @@
                         <div class="wysiwyg_settings">
                             <button id="btn_bold" class="wysiwyg_button">B</button>
                             <button id="btn_italic" class="wysiwyg_button">I</button>
+                            <button id="btn_strike" class="wysiwyg_button">-</button>
+                            <button id="btn_ordered" class="wysiwyg_button">1.</button>
+                            <button id="btn_unordered" class="wysiwyg_button">·</button>
 
-                            <button class="wysiwyg_button">X</button>
+                            <select id="select_fontsize" class="wysiwyg_select">
+                                <option selected value="none">Rozmiar fontu</option>
+                                <option value="8">8px</option>
+                                <option value="9">9px</option>
+                                <option value="10">10px</option>
+                                <option value="11">11px</option>
+                                <option value="12">12px</option>
+                                <option value="14">14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                                <option value="22">22px</option>
+                                <option value="24">24px</option>
+                                <option value="28">28px</option>
+                                <option value="36">36px</option>
+                                <option value="48">48px</option>
+                                <option value="64">64px</option>
+                                <option value="82">82px</option>
+                            </select>
 
                         </div>
                         <p class="wysiwyg_content" id="wysiwyg_content" contenteditable>Test</p>

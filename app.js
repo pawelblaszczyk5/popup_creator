@@ -9,10 +9,6 @@ let settings = {
 const get_new_row = () => {
     let div = document.createElement("div")
     div.classList.add("row")
-    let number = parseInt(document.getElementById("popup").getAttribute("data-row_counter"))
-    number++
-    div.id = "row_" + number
-    document.getElementById("popup").setAttribute("data-row_counter", number)
     return div
 }
 const clean_rows = () => {
@@ -23,8 +19,8 @@ const clean_rows = () => {
 }
 const get_placeholder = () => {
     let div = document.createElement("div")
-    div.style.width = "50px"
-    div.style.height = "50px"
+    div.style.width = "30px"
+    div.style.height = "30px"
     div.style.border = "1px solid red"
     div.id = "placeholder"
     return div
@@ -61,17 +57,10 @@ const place_placeholder = (placement) => {
     let content = shadowRoot.getElementById("content")
     let row = null
     if (placement.direction != "inside") {
-        if (div.parentElement) {
-            if (div.parentElement.classList.contains("row") && div.parentElement.children.length == 1)
-                row = div.parentElement
-        }
-        if (row == null)
-            row = get_new_row()
+        row = get_new_row()
         row.appendChild(div)
     } else {
-        if (div.parentElement)
-            if (div.parentElement.classList.contains("row") && div.parentElement.children.length == 1)
-                remove_item(div.parentElement)
+        div.parentElement.style.height = div.parentElement.getBoundingClientRect().height + "px"
     }
     switch (placement.direction) {
         case "over":
@@ -89,6 +78,9 @@ const place_placeholder = (placement) => {
         case "in":
             content.appendChild(row)
             break
+    }
+    if (placement.direction != "inside") {
+        clean_rows()
     }
 }
 // calculate where item will be placed while moving it
@@ -181,6 +173,12 @@ const drag = function (e) {
             } else
                 item_to_place = what
             shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
+            if (!shadowRoot.getElementById("placeholder").parentElement.id) {
+                let number = parseInt(document.getElementById("popup").getAttribute("data-row_counter"))
+                number++
+                shadowRoot.getElementById("placeholder").parentElement.id = "row_" + number
+                document.getElementById("popup").setAttribute("data-row_counter", number)
+            }
             remove_item(shadowRoot.getElementById("placeholder"))
             clean_rows()
         }
@@ -276,7 +274,6 @@ const initialize = () => {
                     width: 100%;
                     display: flex;
                     flex-direction: row;
-                    min-height: 50px;
                     border: 1px solid red;
                     justify-content: space-evenly;
                 }
@@ -331,17 +328,71 @@ const initialize = () => {
     }
 }
 initialize();
-(function () {
-    let wysiwyg = document.getElementById("wysiwyg_content")
 
+// wysiwyg function 
+(function () {
+    document.execCommand("styleWithCSS", false, true)
+    let wysiwyg = document.getElementById("wysiwyg_content")
+    wysiwyg.addEventListener("input", (e) => {
+        if (wysiwyg.textContent.length == 0)
+            document.execCommand("fontSize", false, "1")
+        const change_font = () => {
+            var fontElements = window.getSelection().anchorNode.parentNode
+            if (fontElements.style.fontSize == "x-small") {
+                if (document.getElementById("select_fontsize").value != "none")
+                    fontElements.style.fontSize = document.getElementById("select_fontsize").value + "rem"
+                else
+                    fontElements.style.fontSize = 16 + "rem"
+
+            }
+            wysiwyg.removeEventListener("input", change_font)
+        }
+        wysiwyg.addEventListener("input", change_font)
+        wysiwyg.focus()
+    })
     document.getElementById("btn_bold").addEventListener("click", () => {
+        wysiwyg.focus()
         document.execCommand("bold", false, true)
         wysiwyg.focus()
     })
+
     document.getElementById("btn_italic").addEventListener("click", () => {
+        wysiwyg.focus()
         document.execCommand("italic", false, true)
         wysiwyg.focus()
-
-
     })
+
+    document.getElementById("select_fontsize").addEventListener("input", (e) => {
+        if (e.target.value != "none") {
+            wysiwyg.focus()
+            document.execCommand("fontSize", false, "1");
+            const change_font = () => {
+                var fontElements = window.getSelection().anchorNode.parentNode
+                if (fontElements.style.fontSize == "x-small") {
+                    fontElements.style.fontSize = e.target.value + "rem"
+                }
+                wysiwyg.removeEventListener("input", change_font)
+            }
+            wysiwyg.addEventListener("input", change_font)
+            wysiwyg.focus()
+        } else {
+            wysiwyg.focus()
+        }
+    })
+    document.getElementById("btn_strike").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("strikeThrough", false, true)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_ordered").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("insertOrderedList", false, true)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_unordered").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("insertUnorderedList", false, true)
+        wysiwyg.focus()
+    })
+
 })();
