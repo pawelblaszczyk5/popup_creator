@@ -330,4 +330,18 @@ const initialize = () => {
         })
     }
 }
-initialize()
+initialize();
+(function () {
+    let wysiwyg = document.getElementById("wysiwyg_content")
+
+    document.getElementById("btn_bold").addEventListener("click", () => {
+        document.execCommand("bold", false, true)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_italic").addEventListener("click", () => {
+        document.execCommand("italic", false, true)
+        wysiwyg.focus()
+
+
+    })
+})();

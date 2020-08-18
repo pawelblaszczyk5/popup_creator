@@ -125,6 +125,36 @@
             height: 32px;
         }
 
+        .wysiwyg {
+            width: 100%;
+            height: 300px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+
+        }
+
+        .wysiwyg_settings {
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .wysiwyg_button {
+            height: 30px;
+            width: 30px;
+            border: none;
+            border-radius: 0;
+
+        }
+
+        .wysiwyg_content {
+            height: calc(100% - 60px)
+        }
+
         .left__toolbar {
             position: absolute;
             width: 40%;
@@ -212,7 +242,18 @@
                 </div>
             </div>
             <div class="right__panels">
-                <div id="element_settings" class="panel">asd</div>
+                <div id="element_settings" class="panel">
+                    <div class="wysiwyg" id="wysiwyg">
+                        <div class="wysiwyg_settings">
+                            <button id="btn_bold" class="wysiwyg_button">B</button>
+                            <button id="btn_italic" class="wysiwyg_button">I</button>
+
+                            <button class="wysiwyg_button">X</button>
+
+                        </div>
+                        <p class="wysiwyg_content" id="wysiwyg_content" contenteditable>Test</p>
+                    </div>
+                </div>
                 <div id="inputs_settings" class="panel">xd</div>
                 <div id="row_settings" class="panel">cd</div>
                 <div id="global_settings" class="panel">
