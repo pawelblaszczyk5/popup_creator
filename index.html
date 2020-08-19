@@ -8,6 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
     <script src="jscolor.js"></script>
     <style>
+        @font-face {
+            font-family: 'icons';
+            src: url('fontello.woff2') format('woff2'),
+                url('fontelo.woff') format('woff'),
+                url('fontello.ttf') format('truetype');
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -132,16 +139,15 @@
 
         .wysiwyg {
             width: 100%;
-            height: 300px;
+            height: 400px;
             border: 1px solid black;
             display: flex;
             flex-direction: column;
             background-color: white;
-
         }
 
         .wysiwyg_settings {
-            height: 70px;
+            height: 110px;
             display: flex;
             flex-direction: row;
             align-content: flex-start;
@@ -151,18 +157,21 @@
         }
 
         .wysiwyg_button {
+            font-family: 'icons';
             height: 30px;
             width: 30px;
             border: none;
             border-radius: 0;
-            border: 1px solid black;
-            margin: 0 2px;
+            margin: 2px;
+            color: white;
+            font-size: 14px;
+            background-color: #2F4050;
         }
 
         .wysiwyg_content {
             font-size: 1px;
             font-size: 16rem;
-            height: calc(100% - 70px);
+            height: calc(100% - 110px);
             padding: 3px;
         }
 
@@ -176,7 +185,30 @@
 
         .wysiwyg_select {
             border: 1px solid black;
-            margin: 0 2px;
+            margin: 2px;
+        }
+
+        .wysiwyg_color {
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+            font-family: 'Open Sans', sans-serif;
+            width: 100px;
+        }
+
+        .wysiwyg_input {
+            height: 30px;
+            border: 1px solid black;
+            margin: 2px;
+            border-radius: 0;
+        }
+
+        .wrap-break {
+            width: 100%;
+        }
+
+        .wysiwyg_button--margin-left {
+            margin-left: 12px;
         }
 
         .left__toolbar {
@@ -269,12 +301,21 @@
                 <div id="element_settings" class="panel">
                     <div class="wysiwyg" id="wysiwyg">
                         <div class="wysiwyg_settings">
-                            <button id="btn_bold" class="wysiwyg_button">B</button>
-                            <button id="btn_italic" class="wysiwyg_button">I</button>
-                            <button id="btn_strike" class="wysiwyg_button">-</button>
-                            <button id="btn_ordered" class="wysiwyg_button">1.</button>
-                            <button id="btn_unordered" class="wysiwyg_button">·</button>
-
+                            <button id="btn_bold" class="wysiwyg_button"></button>
+                            <button id="btn_italic" class="wysiwyg_button"></button>
+                            <button id="btn_strike" class="wysiwyg_button"></button>
+                            <button id="btn_underline" class="wysiwyg_button"></button>
+                            <button id="btn_ordered" class="wysiwyg_button"></button>
+                            <button id="btn_unordered" class="wysiwyg_button"></button>
+                            <button id="btn_justifyleft" class="wysiwyg_button wysiwyg_button--margin-left"></button>
+                            <button id="btn_justifycenter" class="wysiwyg_button"></button>
+                            <button id="btn_justifyright" class="wysiwyg_button"></button>
+                            <button id="btn_justifyfull" class="wysiwyg_button"></button>
+                            <div class="wrap-break"></div>
+                            <button id="btn_indent" class="wysiwyg_button"></button>
+                            <button id="btn_outdent" class="wysiwyg_button"></button>
+                            <input type="url" class="wysiwyg_input wysiwyg_button--margin-left" id="wysiwyg_href">
+                            <button id="btn_href" class="wysiwyg_button"></button>
                             <select id="select_fontsize" class="wysiwyg_select">
                                 <option selected value="none">Rozmiar fontu</option>
                                 <option value="8">8px</option>
@@ -294,7 +335,14 @@
                                 <option value="64">64px</option>
                                 <option value="82">82px</option>
                             </select>
-
+                            <input id="btn_color" class="wysiwyg_button wysiwyg_color">
+                            <select id="select_fontname" class="wysiwyg_select">
+                                <option selected value="none">Nazwa fontu</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Impact">Impact</option>
+                            </select>
                         </div>
                         <p class="wysiwyg_content" id="wysiwyg_content" contenteditable>Test</p>
                     </div>
@@ -338,8 +386,8 @@
                     </label>
                     <label class="label">
                         <span class="label-text">Kolor tła</span>
-                        <input class="input input--standard input--color" data-editing="content::before"
-                            data-what="style" data-name="backgroundColor" data-jscolor="">
+                        <input id="colorPicker1" class="input input--standard input--color"
+                            data-editing="content::before" data-what="style" data-name="backgroundColor">
                     </label>
                     <label class="label">
                         <span class="label-text">Obrazek w tle</span>

@@ -1,11 +1,13 @@
-jscolor.presets.default = {
-    format: 'rgba'
-}
 let settings = {
     editing: null,
     height: 600
-
 }
+const picker1 = new JSColor(document.getElementById("colorPicker1"), {
+    'format': 'rgba',
+})
+const picker2 = new JSColor(document.getElementById("btn_color"), {
+    'format': 'hex',
+})
 const get_new_row = () => {
     let div = document.createElement("div")
     div.classList.add("row")
@@ -281,6 +283,9 @@ const initialize = () => {
                     display: block;
                     width: 100%;
                 }
+                .p{
+                    font-size: 16rem;
+                }
                 `;
             shadow.appendChild(style)
             let wrapper = document.createElement("div")
@@ -326,6 +331,7 @@ const initialize = () => {
             add_style("filter", filter_string, "content::before")
         })
     }
+
 }
 initialize();
 
@@ -381,6 +387,11 @@ initialize();
         document.execCommand("strikeThrough", false, true)
         wysiwyg.focus()
     })
+    document.getElementById("btn_underline").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("underline", false, true)
+        wysiwyg.focus()
+    })
     document.getElementById("btn_ordered").addEventListener("click", () => {
         wysiwyg.focus()
         document.execCommand("insertOrderedList", false, true)
@@ -391,5 +402,57 @@ initialize();
         document.execCommand("insertUnorderedList", false, true)
         wysiwyg.focus()
     })
-
+    document.getElementById("btn_indent").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("indent", false, true)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_outdent").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("outdent", false, true)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_color").addEventListener('input', (e) => {
+        console.log(e.target.value)
+        wysiwyg.focus()
+        picker2.hide()
+        document.execCommand("foreColor", false, e.target.value)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_href").addEventListener('click', (e) => {
+        if (document.getElementById("wysiwyg_href").checkValidity()) {
+            console.log("haha")
+            wysiwyg.focus()
+            document.execCommand("createLink", false, document.getElementById("wysiwyg_href").value)
+            document.getElementById("wysiwyg_href").value = ""
+            wysiwyg.focus()
+        }
+    })
+    document.getElementById("select_fontname").addEventListener('input', (e) => {
+        if (e.target.value != "none") {
+            wysiwyg.focus()
+            document.execCommand("fontName", false, e.target.value)
+            wysiwyg.focus()
+        }
+    })
+    document.getElementById("btn_justifyleft").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("justifyLeft", false, null)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_justifycenter").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("justifyCenter", false, null)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_justifyright").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("justifyRight", false, null)
+        wysiwyg.focus()
+    })
+    document.getElementById("btn_justifyfull").addEventListener("click", () => {
+        wysiwyg.focus()
+        document.execCommand("justifyFull", false, null)
+        wysiwyg.focus()
+    })
 })();
