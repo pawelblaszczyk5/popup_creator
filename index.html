@@ -319,7 +319,7 @@
         </div>
         <div class="wrapper__right">
             <div class="right__settings--panels">
-                <div data-which_panel="element_settings" class="panel__mark">
+                <div data-which_panel="element_settings" id="element_settings--trigger" class="panel__mark">
                     Ustawienia elementu
                 </div>
                 <div data-which_panel="inputs_settings" class="panel__mark">
@@ -334,7 +334,6 @@
             </div>
             <div class="right__panels">
                 <div id="element_settings" class="panel">
-
                     <label class="label label-element label-p">
                         <span class="label-text label--checkbox">Czy ukryć na urządzeniach mobilnych?</span>
                         <input class="input input--element input--checkbox" data-what="hide" type="checkbox">
@@ -517,6 +516,14 @@
                             <option value="flex-end">Do końca</option>
                             <option value="space-evenly">Wyrównaj</option>
                             <option value="space-between">Rozłóż</option>
+                        </select>
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wyrównanie w pionie</span>
+                        <select class="input input--row" data-what="style" data-name="align-items">
+                            <option value="flex-start">Do początku</option>
+                            <option value="center">Wyśrodkuj</option>
+                            <option value="flex-end">Do końca</option>
                         </select>
                     </label>
                 </div>

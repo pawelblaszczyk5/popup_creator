@@ -164,6 +164,7 @@ const calculate_placement = (x, y) => {
 }
 
 const edit = (element) => {
+    document.getElementById("element_settings--trigger").click()
     if (!settings.editing || element.parentElement != settings.editing.parentElement) {
         for (let elem of document.getElementsByClassName("input--row")) {
             if (elem.getAttribute("data-suffix"))
@@ -497,6 +498,8 @@ initialize();
                 else
                     fontElements.style.fontSize = 16 + "rem"
             }
+            if (settings.editing.classList.contains("p"))
+                settings.editing.innerHTML = wysiwyg.innerHTML
             wysiwyg.removeEventListener("input", change_font)
         }
         wysiwyg.addEventListener("input", change_font)
@@ -527,6 +530,8 @@ initialize();
                     fontElements.style.fontSize = e.target.value + "rem"
                 }
                 wysiwyg.removeEventListener("input", change_font)
+                if (settings.editing.classList.contains("p"))
+                    settings.editing.innerHTML = wysiwyg.innerHTML
             }
             wysiwyg.addEventListener("input", change_font)
             wysiwyg.focus()
