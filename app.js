@@ -46,7 +46,27 @@ const add_style = (style, value, selector) => {
         selected_rule = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
     }
     selected_rule.style[style] = value
-
+}
+const add_to_media = (style, value, selector, width) => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    let media
+    let selected_rule
+    for (let rule of shadowRoot.styleSheets[0].rules) {
+        if (rule.conditionText)
+            if (rule.conditionText.indexOf(width + "px") != -1)
+                media = rule
+    }
+    for (let rule of media.cssRules) {
+        if (rule.selectorText == selector) {
+            selected_rule = rule
+            break
+        }
+    }
+    if (selected_rule == null) {
+        media.insertRule(`${selector}{}`, media.cssRules.length)
+        selected_rule = media.cssRules[(media.cssRules.length) - 1]
+    }
+    selected_rule.style[style] = value
 }
 const add_attribute = (attribute, value, element) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
@@ -142,6 +162,37 @@ const calculate_placement = (x, y) => {
             remove_item(shadowRoot.getElementById("placeholder"))
     }
 }
+
+const edit = (element) => {
+    if (!settings.editing || element.parentElement != settings.editing.parentElement) {
+        for (let elem of document.getElementsByClassName("input--row")) {
+            if (elem.getAttribute("data-suffix"))
+                elem.value = parseInt(window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
+            else if (elem.tagName == "SELECT")
+                for (let i = 0; i < elem.children.length; i++)
+                    if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
+                        elem.selectedIndex = i
+        }
+    }
+    settings.editing = element
+    let template = element.id.substring(0, element.id.indexOf("_"))
+    console.log(template)
+    document.getElementById("wysiwyg_content").contentEditable = template == "p" ? true : false
+    if (template == "p")
+        document.getElementById("wysiwyg_content").innerHTML = element.innerHTML
+    for (let elem of document.getElementsByClassName("label-element"))
+        elem.style.display = !elem.classList.contains("label-" + template) ? "none" : "flex"
+    for (let elem of document.getElementsByClassName("input--element")) {
+        if (elem.parentElement.style.display == "flex") {
+            console.log(elem.getAttribute("data-what"), elem.getAttribute("data-name"))
+            if (elem.getAttribute("data-what") == "style") {
+                console.log(window.getComputedStyle(element)[elem.getAttribute("data-name")])
+                if (elem.getAttribute("data-suffix") == "px")
+                    elem.value = parseInt(window.getComputedStyle(element)[elem.getAttribute("data-name")])
+            }
+        }
+    }
+}
 // function to drag elements around
 const drag = function (e) {
     let element = this.cloneNode(true);
@@ -170,7 +221,7 @@ const drag = function (e) {
                 item_to_place.classList.add(what.getAttribute("data-template_id"))
                 what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
                 item_to_place.addEventListener("click", function (e) {
-                    console.log(this)
+                    edit(this)
                 })
                 item_to_place.addEventListener("dblclick", drag)
             } else
@@ -297,6 +348,69 @@ const initialize = () => {
                 ::placeholder{
                     color: #8e8e8e;
                 }
+                /* Customize the label (the container) */
+                .container {
+                    display: block;
+                    position: relative;
+                    padding-left: 28px;
+                    cursor: pointer;
+                    font-size: 16rem;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                }
+                .container input {
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                    height: 0;
+                    width: 0;
+                }
+                .checkmark {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 20px;
+                    width: 20px;
+                    background-color: #fff;
+                    border: 1px solid black;
+                }
+                .checkmark::after {
+                    content: "";
+                    position: absolute;
+                    display: none;
+                }
+                .container input:checked ~ .checkmark::after {
+                    display: block;
+                }
+                .container .checkmark::after {
+                    left: 6px;
+                    top: 3px;
+                    width: 4px;
+                    height: 9px;
+                    border: solid black;
+                    border-width: 0 3px 3px 0;
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                }
+                .input--submit{
+                    background: #fff;
+                    border: 1px solid black;
+                    border-radius: 0;
+                    padding: 5px 15px;
+                }
+                @media screen and (max-width: 500px)
+                {
+                    .mobile_hide {
+                        display: none;
+                    }
+                }
+                @media screen and (max-width: 280px)
+                {
+
+                }
                 `;
             shadow.appendChild(style)
             let wrapper = document.createElement("div")
@@ -315,7 +429,7 @@ const initialize = () => {
             let input = e.target
             let shadowRoot = document.getElementById("popup").shadowRoot
             if (input.checkValidity()) {
-                let editing = input.getAttribute("data-editing") != "" ? input.getAttribute("data-editing") : "#" + settings.editing.id
+                let editing = input.getAttribute("data-editing") != null ? input.getAttribute("data-editing") : ("#" + settings.editing.id)
                 let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
                 switch (input.getAttribute("data-what")) {
                     case "style":
@@ -324,9 +438,9 @@ const initialize = () => {
                     case "attribute":
                         break
                 }
-                if (editing = shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "maxWidth") {
+                if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "maxWidth") {
                     document.getElementById("popup").style.width = input.value + "px"
-                } else if (editing = shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
+                } else if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
                     document.getElementById("popup").style.height = input.value + "px"
                 }
             }
@@ -342,7 +456,29 @@ const initialize = () => {
             add_style("filter", filter_string, "#content::before")
         })
     }
-
+    for (let element of document.getElementsByClassName("input--row")) {
+        element.addEventListener("input", (e) => {
+            let input = e.target
+            if (input.checkValidity()) {
+                let editing = "#" + settings.editing.parentElement.id
+                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
+                switch (input.getAttribute("data-what")) {
+                    case "style":
+                        add_style(input.getAttribute("data-name"), value, editing)
+                        break
+                    case "attribute":
+                        break
+                }
+            }
+        })
+    }
+    for (let element of document.getElementsByClassName("input--checkbox")) {
+        element.addEventListener("input", (e) => {
+            if (settings.editing != null)
+                if (e.target.getAttribute("data-what") == "hide")
+                    settings.editing.classList.toggle("mobile_hide")
+        })
+    }
 }
 initialize();
 
@@ -354,7 +490,7 @@ initialize();
         if (wysiwyg.textContent.length == 0)
             document.execCommand("fontSize", false, "1")
         const change_font = () => {
-            var fontElements = window.getSelection().anchorNode.parentNode
+            let fontElements = window.getSelection().anchorNode.parentNode
             if (fontElements.style.fontSize == "x-small") {
                 if (document.getElementById("select_fontsize").value != "none")
                     fontElements.style.fontSize = document.getElementById("select_fontsize").value + "rem"
@@ -365,6 +501,11 @@ initialize();
         }
         wysiwyg.addEventListener("input", change_font)
         wysiwyg.focus()
+    })
+    wysiwyg.addEventListener("input", () => {
+        console.log(settings.editing)
+        if (settings.editing.classList.contains("p"))
+            settings.editing.innerHTML = wysiwyg.innerHTML
     })
     document.getElementById("btn_bold").addEventListener("click", () => {
         wysiwyg.focus()
@@ -381,7 +522,7 @@ initialize();
             wysiwyg.focus()
             document.execCommand("fontSize", false, "1");
             const change_font = () => {
-                var fontElements = window.getSelection().anchorNode.parentNode
+                let fontElements = window.getSelection().anchorNode.parentNode
                 if (fontElements.style.fontSize == "x-small") {
                     fontElements.style.fontSize = e.target.value + "rem"
                 }
@@ -438,7 +579,7 @@ initialize();
             document.execCommand("createLink", false, document.getElementById("wysiwyg_href").value)
             document.getElementById("href_modal").style.display = "none"
             document.getElementById("wysiwyg_href").value = ""
-            var hrefElement = window.getSelection().anchorNode.parentNode
+            let hrefElement = window.getSelection().anchorNode.parentNode
             hrefElement.target = "_blank"
             wysiwyg.focus()
         }

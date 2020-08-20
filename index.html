@@ -127,6 +127,15 @@
             margin-bottom: 5px;
         }
 
+        .label--checkbox {
+            width: 100%;
+        }
+
+        .input--checkbox {
+            width: 40px;
+            height: 20px;
+        }
+
         .input--narrow {
             width: 20%;
         }
@@ -138,6 +147,7 @@
         }
 
         .wysiwyg {
+            margin-bottom: 10px;
             width: 100%;
             height: 400px;
             border: 1px solid black;
@@ -324,8 +334,48 @@
             </div>
             <div class="right__panels">
                 <div id="element_settings" class="panel">
-                    <div class="wysiwyg" id="wysiwyg">
 
+                    <label class="label label-element label-p">
+                        <span class="label-text label--checkbox">Czy ukryć na urządzeniach mobilnych?</span>
+                        <input class="input input--element input--checkbox" data-what="hide" type="checkbox">
+                    </label>
+                    <label class="label label-element label-wrap label-p">
+                        <span class="label-text label-text--wider">
+                            Paddingi
+                        </span>
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="0">
+                    </label>
+                    <label class="label label-element label-wrap label-p">
+                        <span class="label-text label-text--wider">
+                            Marginesy
+                        </span>
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="marginTop" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="marginRight" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="marginBottom" type="number" min="0" value="0">
+                        <input class="input input--element input--narrow input--standard" data-what="style"
+                            data-suffix="px" data-name="marginLeft" type="number" min="0" value="0">
+                    </label>
+                    <label class="label label-element label-p">
+                        <span class="label-text">Szerokość</span>
+                        <input data-what="style" data-suffix="px" data-name="width" type="number"
+                            class="input input--element input--range input--standard">
+                    </label>
+                    <label class="label label-element label-p">
+                        <span class="label-text">Wysokość</span>
+                        <input data-what="style" data-suffix="px" data-name="height" type="number"
+                            class="input input--element input--range input--standard">
+                    </label>
+                    <div class="wysiwyg label-element label-p" id="wysiwyg">
                         <div class="wysiwyg_settings">
                             <button id="btn_bold" class="wysiwyg_button"></button>
                             <button id="btn_italic" class="wysiwyg_button"></button>
@@ -373,7 +423,7 @@
                                 <option value="Impact">Impact</option>
                             </select>
                         </div>
-                        <p class="wysiwyg_content" id="wysiwyg_content" contenteditable>Test</p>
+                        <p class="wysiwyg_content" id="wysiwyg_content">Test</p>
                     </div>
                 </div>
                 <div id="inputs_settings" class="panel">
@@ -425,8 +475,51 @@
                         <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="borderRadius"
                             type="range" min="0" class="input input--standard input--range" value="0">
                     </label>
+                    <label class="label">
+                        <span class="label-text">Kolor checkboxa</span>
+                        <input class="input input--standard input--color"
+                            data-editing=".container .checkmark::after, .checkmark" data-what="style"
+                            data-name="borderColor" data-jscolor="" value="#000000">
+                    </label>
                 </div>
-                <div id="row_settings" class="panel">cd</div>
+                <div id="row_settings" class="panel">
+                    <label class="label label-wrap">
+                        <span class="label-text label-text--wider">
+                            Paddingi
+                        </span>
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="paddingTop" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="paddingRight" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="paddingBottom" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="paddingLeft" type="number" min="0" value="0">
+                    </label>
+                    <label class="label label-wrap">
+                        <span class="label-text label-text--wider">
+                            Marginesy
+                        </span>
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="marginTop" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="marginRight" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="marginBottom" type="number" min="0" value="0">
+                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                            data-name="marginLeft" type="number" min="0" value="0">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Wyrównanie w poziomie</span>
+                        <select class="input input--row" data-what="style" data-name="justify-content">
+                            <option value="flex-start">Do początku</option>
+                            <option value="center">Wyśrodkuj</option>
+                            <option value="flex-end">Do końca</option>
+                            <option value="space-evenly">Wyrównaj</option>
+                            <option value="space-between">Rozłóż</option>
+                        </select>
+                    </label>
+                </div>
                 <div id="global_settings" class="panel">
                     <label class="label">
                         <span class="label-text">Szerokość popupa</span>
@@ -508,25 +601,24 @@
         </div>
     </div>
     <template class="template" id="p">
-        <p>Lorem Ipsum</p>
+        <p>Przykładowy tekst</p>
     </template>
     <template class="template" id="img">
         <div>
             <img src="https://www.w3schools.com/w3css/img_lights.jpg">
         </div>
     </template>
-    <template class="template" id="template_3">
+    <template class="template" id="input">
         <input class="input--text" type="email">
     </template>
-    <template class="template" id="template_4">
-        <p>
-            Test 4
-        </p>
+    <template class="template" id="checkbox">
+        <label class="container">Przykładowy tekst
+            <input type="checkbox">
+            <span class="checkmark"></span>
+        </label>
     </template>
-    <template class="template" id="template_5">
-        <p>
-            Test 5
-        </p>
+    <template class="template" id="submit">
+        <input type="submit" class="input--submit" value="Wyślij">
     </template>
     <script src="app.js"></script>
 </body>
