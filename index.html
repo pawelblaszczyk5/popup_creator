@@ -147,7 +147,6 @@
         }
 
         .wysiwyg_settings {
-            height: 110px;
             display: flex;
             flex-direction: row;
             align-content: flex-start;
@@ -168,10 +167,16 @@
             background-color: #2F4050;
         }
 
+        .wysiwyg_button--alt {
+            background-color: white;
+            color: #2F4050;
+            border: 1px solid black;
+        }
+
         .wysiwyg_content {
+            height: 100%;
             font-size: 1px;
             font-size: 16rem;
-            height: calc(100% - 110px);
             padding: 3px;
         }
 
@@ -186,6 +191,7 @@
         .wysiwyg_select {
             border: 1px solid black;
             margin: 2px;
+            height: 30px;
         }
 
         .wysiwyg_color {
@@ -208,7 +214,26 @@
         }
 
         .wysiwyg_button--margin-left {
-            margin-left: 12px;
+            margin-left: 15px;
+        }
+
+        .wysiwyg_modal {
+            width: 300px;
+            height: 100px;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: calc(50% - 150px);
+            background-color: #2F4050;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .input--range {
+            padding: 0px;
+            height: 32px;
         }
 
         .left__toolbar {
@@ -300,22 +325,26 @@
             <div class="right__panels">
                 <div id="element_settings" class="panel">
                     <div class="wysiwyg" id="wysiwyg">
+
                         <div class="wysiwyg_settings">
                             <button id="btn_bold" class="wysiwyg_button"></button>
                             <button id="btn_italic" class="wysiwyg_button"></button>
                             <button id="btn_strike" class="wysiwyg_button"></button>
                             <button id="btn_underline" class="wysiwyg_button"></button>
-                            <button id="btn_ordered" class="wysiwyg_button"></button>
+                            <button id="btn_ordered" class="wysiwyg_button wysiwyg_button--margin-left"></button>
                             <button id="btn_unordered" class="wysiwyg_button"></button>
-                            <button id="btn_justifyleft" class="wysiwyg_button wysiwyg_button--margin-left"></button>
+                            <button id="btn_href" class="wysiwyg_button wysiwyg_button--margin-left"></button>
+
+                            <div class="wrap-break"></div>
+
+                            <button id="btn_justifyleft" class="wysiwyg_button"></button>
                             <button id="btn_justifycenter" class="wysiwyg_button"></button>
                             <button id="btn_justifyright" class="wysiwyg_button"></button>
                             <button id="btn_justifyfull" class="wysiwyg_button"></button>
-                            <div class="wrap-break"></div>
                             <button id="btn_indent" class="wysiwyg_button"></button>
                             <button id="btn_outdent" class="wysiwyg_button"></button>
-                            <input type="url" class="wysiwyg_input wysiwyg_button--margin-left" id="wysiwyg_href">
-                            <button id="btn_href" class="wysiwyg_button"></button>
+                            <div class="wrap-break"></div>
+
                             <select id="select_fontsize" class="wysiwyg_select">
                                 <option selected value="none">Rozmiar fontu</option>
                                 <option value="8">8px</option>
@@ -347,35 +376,84 @@
                         <p class="wysiwyg_content" id="wysiwyg_content" contenteditable>Test</p>
                     </div>
                 </div>
-                <div id="inputs_settings" class="panel">xd</div>
+                <div id="inputs_settings" class="panel">
+                    <label class="label">
+                        <span class="label-text">Kolor tła</span>
+                        <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
+                            data-name="backgroundColor" data-jscolor="" value="rgba(255,255,255,1)">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Kolor fontu</span>
+                        <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
+                            data-name="color" data-jscolor="" value="#000000">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Rozmiar fontu</span>
+                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="fontSize"
+                            type="number" class="input input--standard input--range" value="14">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Kolor fontu placeholdera</span>
+                        <input class="input input--standard input--color" data-editing="::placeholder" data-what="style"
+                            data-name="color" data-jscolor="" value="#8e8e8e">
+                    </label>
+                    <label class="label label-wrap">
+                        <span class="label-text label-text--wider">
+                            Paddingi
+                        </span>
+                        <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
+                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="7">
+                        <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
+                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="7">
+                        <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
+                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="7">
+                        <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
+                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="7">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Kolor ramki</span>
+                        <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
+                            data-name="borderColor" data-jscolor="" value="#000000">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Grubość ramki</span>
+                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="borderWidth"
+                            type="number" min="0" max="15" class="input input--standard input--range" value="1">
+                    </label>
+                    <label class="label">
+                        <span class="label-text">Zaokrąglenie ramki</span>
+                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="borderRadius"
+                            type="range" min="0" class="input input--standard input--range" value="0">
+                    </label>
+                </div>
                 <div id="row_settings" class="panel">cd</div>
                 <div id="global_settings" class="panel">
                     <label class="label">
                         <span class="label-text">Szerokość popupa</span>
-                        <input class="input input--standard" data-editing="wrapper" data-what="style" data-suffix="px"
+                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-suffix="px"
                             data-name="maxWidth" type="number" min="280" max="1200" value="600">
                     </label>
                     <label class="label">
                         <span class="label-text">Wysokość popupa</span>
-                        <input class="input input--standard" data-editing="wrapper" data-what="style" data-suffix="px"
+                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-suffix="px"
                             data-name="height" type="number" max="650" min="300" value="600">
                     </label>
                     <label class="label label-wrap">
                         <span class="label-text label-text--wider">
                             Paddingi
                         </span>
-                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                        <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
                             data-suffix="px" data-name="paddingTop" type="number" min="0" value="0">
-                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                        <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
                             data-suffix="px" data-name="paddingRight" type="number" min="0" value="0">
-                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                        <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
                             data-suffix="px" data-name="paddingBottom" type="number" min="0" value="0">
-                        <input class="input input--standard input--narrow" data-editing="content" data-what="style"
+                        <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
                             data-suffix="px" data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label">
                         <span class="label-text">Wyrównanie w pionie</span>
-                        <select class="input input--standard" data-editing="content" data-what="style"
+                        <select class="input input--standard" data-editing="#content" data-what="style"
                             data-name="justify-content">
                             <option value="flex-start">Do początku</option>
                             <option value="center">Wyśrodkuj</option>
@@ -387,16 +465,16 @@
                     <label class="label">
                         <span class="label-text">Kolor tła</span>
                         <input id="colorPicker1" class="input input--standard input--color"
-                            data-editing="content::before" data-what="style" data-name="backgroundColor">
+                            data-editing="#content::before" data-what="style" data-name="backgroundColor">
                     </label>
                     <label class="label">
                         <span class="label-text">Obrazek w tle</span>
-                        <input class="input input--standard" data-editing="content::before" data-what="style"
+                        <input class="input input--standard" data-editing="#content::before" data-what="style"
                             data-prefix="url('" data-suffix="')" data-name="backgroundImage" type="text">
                     </label>
                     <label class="label">
                         <span class="label-text">Wypełnienienie tła</span>
-                        <select class="input input--standard" data-editing="content::before" data-what="style"
+                        <select class="input input--standard" data-editing="#content::before" data-what="style"
                             data-name="backgroundSize">
                             <option value="auto">Domyślne</option>
                             <option value="contain">Dopasuj</option>
@@ -423,6 +501,11 @@
                 </div>
             </div>
         </div>
+        <div id="href_modal" class="wysiwyg_modal">
+            <input type="url" placeholder="Podaj url" class="wysiwyg_input wysiwyg_button--margin-left"
+                id="wysiwyg_href">
+            <button id="btn_addhref" class="wysiwyg_button wysiwyg_button--alt"></button>
+        </div>
     </div>
     <template class="template" id="p">
         <p>Lorem Ipsum</p>
@@ -433,9 +516,7 @@
         </div>
     </template>
     <template class="template" id="template_3">
-        <p>
-            Test 3
-        </p>
+        <input class="input--text" type="email">
     </template>
     <template class="template" id="template_4">
         <p>

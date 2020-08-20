@@ -15,9 +15,11 @@ const get_new_row = () => {
 }
 const clean_rows = () => {
     let shadowRoot = document.getElementById("popup").shadowRoot
-    for (let element of shadowRoot.querySelectorAll(".row"))
+    for (let element of shadowRoot.querySelectorAll(".row")) {
+        element.removeAttribute("style")
         if (element.children.length == 0)
             remove_item(element)
+    }
 }
 const get_placeholder = () => {
     let div = document.createElement("div")
@@ -32,16 +34,15 @@ const remove_item = (element) => {
 }
 const add_style = (style, value, selector) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
-
     let selected_rule
     for (let rule of shadowRoot.styleSheets[0].rules) {
-        if (rule.selectorText == "#" + selector) {
+        if (rule.selectorText == selector) {
             selected_rule = rule
             break
         }
     }
     if (selected_rule == null) {
-        shadowRoot.styleSheets[0].insertRule(`#${selector}{}`, shadowRoot.styleSheets[0].rules.length)
+        shadowRoot.styleSheets[0].insertRule(`${selector}{}`, shadowRoot.styleSheets[0].rules.length)
         selected_rule = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
     }
     selected_rule.style[style] = value
@@ -61,7 +62,7 @@ const place_placeholder = (placement) => {
     if (placement.direction != "inside") {
         row = get_new_row()
         row.appendChild(div)
-    } else {
+    } else if (div.id == "placeholder" && div.parentElement) {
         div.parentElement.style.height = div.parentElement.getBoundingClientRect().height + "px"
     }
     switch (placement.direction) {
@@ -168,10 +169,9 @@ const drag = function (e) {
                 item_to_place.id = what.getAttribute("data-template_id") + "_" + what.getAttribute("data-template_counter")
                 item_to_place.classList.add(what.getAttribute("data-template_id"))
                 what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
-                item_to_place.addEventListener("click", function () {
+                item_to_place.addEventListener("click", function (e) {
                     console.log(this)
                 })
-                // item_to_place.addEventListener("mousedown", drag)
             } else
                 item_to_place = what
             shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
@@ -286,6 +286,15 @@ const initialize = () => {
                 .p{
                     font-size: 16rem;
                 }
+                .input--text{
+                    padding: 7px;
+                    border-radius: 0;
+                    border: 1px solid black;
+                    background-color: #ffffff;
+                }
+                ::placeholder{
+                    color: #8e8e8e;
+                }
                 `;
             shadow.appendChild(style)
             let wrapper = document.createElement("div")
@@ -304,7 +313,7 @@ const initialize = () => {
             let input = e.target
             let shadowRoot = document.getElementById("popup").shadowRoot
             if (input.checkValidity()) {
-                let editing = input.getAttribute("data-editing") != "" ? input.getAttribute("data-editing") : settings.editing.id
+                let editing = input.getAttribute("data-editing") != "" ? input.getAttribute("data-editing") : "#" + settings.editing.id
                 let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
                 switch (input.getAttribute("data-what")) {
                     case "style":
@@ -328,7 +337,7 @@ const initialize = () => {
             let brightness = document.getElementById("bg_brightness").value
             let blur = document.getElementById("bg_blur").value
             let filter_string = `blur(${blur}px) grayscale(${grayscale}%) opacity(${opacity}%) brightness(${brightness}%)`
-            add_style("filter", filter_string, "content::before")
+            add_style("filter", filter_string, "#content::before")
         })
     }
 
@@ -413,18 +422,22 @@ initialize();
         wysiwyg.focus()
     })
     document.getElementById("btn_color").addEventListener('input', (e) => {
-        console.log(e.target.value)
         wysiwyg.focus()
         picker2.hide()
         document.execCommand("foreColor", false, e.target.value)
         wysiwyg.focus()
     })
     document.getElementById("btn_href").addEventListener('click', (e) => {
+        document.getElementById("href_modal").style.display = "flex"
+    })
+    document.getElementById("btn_addhref").addEventListener('click', (e) => {
         if (document.getElementById("wysiwyg_href").checkValidity()) {
-            console.log("haha")
             wysiwyg.focus()
             document.execCommand("createLink", false, document.getElementById("wysiwyg_href").value)
+            document.getElementById("href_modal").style.display = "none"
             document.getElementById("wysiwyg_href").value = ""
+            var hrefElement = window.getSelection().anchorNode.parentNode
+            hrefElement.target = "_blank"
             wysiwyg.focus()
         }
     })
