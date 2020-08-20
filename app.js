@@ -1,6 +1,7 @@
 let settings = {
     editing: null,
-    height: 600
+    width: 600,
+    height: 600,
 }
 const picker1 = new JSColor(document.getElementById("colorPicker1"), {
     'format': 'rgba',
@@ -441,8 +442,10 @@ const initialize = () => {
                 }
                 if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "maxWidth") {
                     document.getElementById("popup").style.width = input.value + "px"
+                    settings.width = input.value
                 } else if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
                     document.getElementById("popup").style.height = input.value + "px"
+                    settings.height = input.value
                 }
             }
         })
