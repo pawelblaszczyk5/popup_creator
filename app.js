@@ -183,8 +183,8 @@ const drag = function (e) {
                 document.getElementById("popup").setAttribute("data-row_counter", number)
             }
             remove_item(shadowRoot.getElementById("placeholder"))
-            clean_rows()
         }
+        clean_rows()
     }
     const move = function (e) {
         e.preventDefault();
