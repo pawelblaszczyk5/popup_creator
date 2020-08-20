@@ -172,6 +172,7 @@ const drag = function (e) {
                 item_to_place.addEventListener("click", function (e) {
                     console.log(this)
                 })
+                item_to_place.addEventListener("dblclick", drag)
             } else
                 item_to_place = what
             shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
@@ -278,6 +279,7 @@ const initialize = () => {
                     flex-direction: row;
                     border: 1px solid red;
                     justify-content: space-evenly;
+                    align-items: center;
                 }
                 .img img{
                     display: block;
