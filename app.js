@@ -220,8 +220,9 @@ const edit = (element) => {
                 let value = window.getComputedStyle(element)[elem.getAttribute("data-name")]
                 let prefix = elem.getAttribute("data-prefix")
                 let prefix_index = prefix ? value.indexOf(prefix) : 0
-                let sufix = elem.getAttribute("data-sufix")
+                let sufix = elem.getAttribute("data-sufix") == "rem" ? "px" : elem.getAttribute("data-sufix")
                 let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
+                console.log(window.getComputedStyle(element)[elem.getAttribute("data-name")])
                 value = window.getComputedStyle(element)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
                 elem.value = value
             } else if (elem.getAttribute("data-what") == "attribute")
