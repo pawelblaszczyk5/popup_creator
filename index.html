@@ -246,7 +246,9 @@
             height: 32px;
         }
 
-
+        .input--textarea {
+            resize: none;
+        }
 
         .label-element {
             display: none;
@@ -357,7 +359,7 @@
                         <span class="label-text label--checkbox">Czy ukryć na urządzeniach mobilnych?</span>
                         <input class="input input--element input--checkbox" data-what="hide" type="checkbox">
                     </label>
-                    <label class="label label-element label-wrap label-p">
+                    <label class="label label-element label-wrap label-p label-submit">
                         <span class="label-text label-text--wider">
                             Paddingi
                         </span>
@@ -370,7 +372,8 @@
                         <input class="input input--element input--narrow input--standard" data-what="style"
                             data-sufix="px" data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
-                    <label class="label label-element label-wrap label-p label-img label-input">
+                    <label
+                        class="label label-element label-wrap label-p label-img label-input label-submit label-checkbox">
                         <span class="label-text label-text--wider">
                             Marginesy
                         </span>
@@ -383,12 +386,12 @@
                         <input class="input input--element input--narrow input--standard" data-what="style"
                             data-sufix="px" data-name="marginLeft" type="number" min="0" value="0">
                     </label>
-                    <label class="label label-element label-p label-img label-input">
+                    <label class="label label-element label-p label-img label-input label-submit label-checkbox">
                         <span class="label-text">Szerokość</span>
                         <input data-what="style" data-sufix="px" data-name="width" type="number"
                             class="input input--element input--range input--standard">
                     </label>
-                    <label class="label label-element label-p label-img label-input">
+                    <label class="label label-element label-p label-img label-input label-submit label-checkbox">
                         <span class="label-text">Wysokość</span>
                         <input data-what="style" data-sufix="px" data-name="height" type="number"
                             class="input input--element input--range input--standard">
@@ -411,9 +414,8 @@
                             <button id="btn_justifyfull" class="wysiwyg_button"></button>
                             <button id="btn_indent" class="wysiwyg_button"></button>
                             <button id="btn_outdent" class="wysiwyg_button"></button>
-                            <div class="wrap-break"></div>
 
-                            <select id="select_fontsize" class="wysiwyg_select">
+                            <select id="select_fontsize" class="wysiwyg_select wysiwyg_button--margin-left">
                                 <option selected value="none">Rozmiar fontu</option>
                                 <option value="8">8px</option>
                                 <option value="9">9px</option>
@@ -432,8 +434,10 @@
                                 <option value="64">64px</option>
                                 <option value="82">82px</option>
                             </select>
-                            <input id="btn_color" class="wysiwyg_button wysiwyg_color">
-                            <select id="select_fontname" class="wysiwyg_select">
+                            <input id="input_color" class="wysiwyg_button wysiwyg_color">
+                            <button id="btn_color" class="wysiwyg_button"></button>
+
+                            <select id="select_fontname" class="wysiwyg_select wysiwyg_button--margin-left">
                                 <option selected value="none">Nazwa fontu</option>
                                 <option value="Arial">Arial</option>
                                 <option value="Verdana">Verdana</option>
@@ -471,9 +475,23 @@
                         <input class="input input--element input--standard" data-what="attribute"
                             data-name="placeholder" type="text">
                     </label>
-                    <label class="label label-element label-input">
+                    <label class="label label-element label-input label-checkbox">
                         <span class="label-text label--checkbox">Czy pole ma być wymagane?</span>
                         <input class="input input--element input--checkbox" data-what="required" type="checkbox">
+                    </label>
+                    <label class="label label-element label-input label-submit">
+                        <span class="label-text">Tekst na przycisku</span>
+                        <input class="input input--element input--standard" data-what="attribute" data-name="value"
+                            type="text">
+                    </label>
+                    <label class="label label-element label-checkbox">
+                        <span class=" label-text">Nazwa zgody</span>
+                        <input class="input input--element" id="agreement_name" data-what="agreement_name" type="text">
+                    </label>
+                    <label class="label label-element label-checkbox">
+                        <span class=" label-text">Tekst zgody</span>
+                        <textarea class="input input--element input--textarea" id="agreement_text"
+                            data-what="agreement_text"></textarea>
                     </label>
                 </div>
                 <div id="inputs_settings" class="panel">
@@ -674,8 +692,11 @@
         <input class="input--text" name="sm-form-email" type="email">
     </template>
     <template class="template" id="checkbox">
-        <label class="container">Przykładowy tekst
-            <input type="checkbox">
+        <label class="container">
+            <span class="agreement_placeholder">Przykładowy tekst</span>
+            <span class="agreement_text">$sm-consent.desc.NAZWA_ZGODY$</span>
+            <input type="checkbox" name="$sm-consent.name.NAZWA_ZGODY$">
+            <input type="hidden" value="true" name="$sm-consent.id.NAZWA_ZGODY$">
             <span class="checkmark"></span>
         </label>
     </template>

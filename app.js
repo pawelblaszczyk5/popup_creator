@@ -6,7 +6,7 @@ let settings = {
 const picker1 = new JSColor(document.getElementById("colorPicker1"), {
     'format': 'rgba',
 })
-const picker2 = new JSColor(document.getElementById("btn_color"), {
+const picker2 = new JSColor(document.getElementById("input_color"), {
     'format': 'hex',
 })
 const get_new_row = () => {
@@ -180,7 +180,11 @@ const edit = (element) => {
     document.getElementById("element_settings--trigger").click()
     if (!settings.editing || element.parentElement != settings.editing.parentElement) {
         for (let elem of document.getElementsByClassName("input--row")) {
-            if (elem.getAttribute("data-what") == "style") {
+            if (elem.tagName == "SELECT") {
+                for (let i = 0; i < elem.children.length; i++)
+                    if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
+                        elem.selectedIndex = i
+            } else if (elem.getAttribute("data-what") == "style") {
                 let value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")]
                 let prefix = elem.getAttribute("data-prefix")
                 let prefix_index = prefix ? value.indexOf(prefix) : 0
@@ -188,10 +192,7 @@ const edit = (element) => {
                 let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
                 value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
                 elem.value = value
-            } else if (elem.tagName == "SELECT")
-                for (let i = 0; i < elem.children.length; i++)
-                    if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
-                        elem.selectedIndex = i
+            }
         }
     }
     settings.editing = element
@@ -220,10 +221,18 @@ const edit = (element) => {
                 let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
                 value = window.getComputedStyle(element)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
                 elem.value = value
-            } else if (elem.getAttribute("data-what") == "attribute") {
+            } else if (elem.getAttribute("data-what") == "attribute")
                 elem.value = element.getAttribute(elem.getAttribute("data-name"))
-            } else if (elem.getAttribute("data-what") == "hide")
+            else if (elem.getAttribute("data-what") == "hide")
                 elem.checked = element.classList.contains("mobile_hide")
+            else if (elem.getAttribute('data-what') == "required")
+                elem.checked = element.getAttribute("required") != null ? true : false
+            else if (elem.getAttribute("data-what") == "agreement_name") {
+                elem.value = element.children[2].getAttribute("name").substring(17, element.children[2].getAttribute("name").length - 1)
+            } else if (elem.getAttribute("data-what") == "agreement_text") {
+                elem.value = element.children[0].textContent
+                console.log(element)
+            }
         }
     }
     for (let elem of document.getElementById("row_settings").children) {
@@ -464,6 +473,9 @@ const initialize = () => {
                     border-radius: 0;
                     padding: 5px 15px;
                 }
+                .agreement_text{
+                    display: none;
+                }
                 @media screen and (max-width: 500px)
                 {
                     .mobile_hide {
@@ -523,7 +535,7 @@ const initialize = () => {
                 if (editing == "#" + shadowRoot.getElementById("wrapper").id && input.getAttribute("data-name") == "maxWidth") {
                     document.getElementById("popup").style.width = input.value + "px"
                     settings.width = input.value
-                } else if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
+                } else if (editing == "#" + shadowRoot.getElementById("wrapper").id && input.getAttribute("data-name") == "height") {
                     document.getElementById("popup").style.height = input.value + "px"
                     settings.height = input.value
                 }
@@ -574,6 +586,14 @@ const initialize = () => {
             }
         })
     }
+    document.getElementById("agreement_name").addEventListener("input", (e) => {
+        settings.editing.children[1].textContent = `$sm-consent.desc.${e.target.value}$`
+        settings.editing.children[2].setAttribute("name", `$sm-consent.name.${e.target.value}$`)
+        settings.editing.children[3].setAttribute("name", `$sm-consent.id.${e.target.value}$`)
+    })
+    document.getElementById("agreement_text").addEventListener("input", (e) => {
+        settings.editing.children[0].textContent = e.target.value
+    })
 }
 initialize();
 
@@ -662,10 +682,9 @@ initialize();
         document.execCommand("outdent", false, true)
         wysiwyg.focus()
     })
-    document.getElementById("btn_color").addEventListener('input', (e) => {
+    document.getElementById("btn_color").addEventListener('click', () => {
         wysiwyg.focus()
-        picker2.hide()
-        document.execCommand("foreColor", false, e.target.value)
+        document.execCommand("foreColor", false, document.getElementById("input_color").value)
         wysiwyg.focus()
     })
     document.getElementById("btn_href").addEventListener('click', (e) => {
