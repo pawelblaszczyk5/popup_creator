@@ -184,6 +184,9 @@ const edit = (element) => {
                 for (let i = 0; i < elem.children.length; i++)
                     if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
                         elem.selectedIndex = i
+            } else if (elem.getAttribute("data-what") == "wrap") {
+                console.log("haha")
+                elem.checked = element.parentElement.classList.contains("row--nowrap")
             } else if (elem.getAttribute("data-what") == "style") {
                 let value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")]
                 let prefix = elem.getAttribute("data-prefix")
@@ -481,6 +484,12 @@ const initialize = () => {
                     .mobile_hide {
                         display: none;
                     }
+                    .row{
+                        flex-direction: column
+                    }
+                    .row--nowrap{
+                        flex-direction: row;
+                    }
                 }
                 @media screen and (max-width: 280px)
                 {
@@ -553,25 +562,29 @@ const initialize = () => {
         })
     }
     for (let element of document.getElementsByClassName("input--row")) {
-        element.addEventListener("input", (e) => {
-            let input = e.target
-            if (input.checkValidity()) {
-                let editing
-                if (settings.editing != null)
-                    editing = "#" + settings.editing.parentElement.id
-                else
-                    return false
-                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-sufix") || "")
-                switch (input.getAttribute("data-what")) {
-                    case "style":
-                        add_style(input.getAttribute("data-name"), value, editing)
-                        break
-                    case "attribute":
-                        break
+        if (element != document.getElementById("row_wrap"))
+            element.addEventListener("input", (e) => {
+                let input = e.target
+                if (input.checkValidity()) {
+                    let editing
+                    if (settings.editing != null)
+                        editing = "#" + settings.editing.parentElement.id
+                    else
+                        return false
+                    let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-sufix") || "")
+                    switch (input.getAttribute("data-what")) {
+                        case "style":
+                            add_style(input.getAttribute("data-name"), value, editing)
+                            break
+                        case "attribute":
+                            break
+                    }
                 }
-            }
-        })
+            })
     }
+    document.getElementById("row_wrap").addEventListener("click", () => {
+        settings.editing.parentElement.classList.toggle("row--nowrap")
+    })
     for (let element of document.getElementsByClassName("input--checkbox")) {
         element.addEventListener("input", (e) => {
             if (settings.editing != null) {
