@@ -185,7 +185,6 @@ const edit = (element) => {
                     if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
                         elem.selectedIndex = i
             } else if (elem.getAttribute("data-what") == "wrap") {
-                console.log("haha")
                 elem.checked = element.parentElement.classList.contains("row--nowrap")
             } else if (elem.getAttribute("data-what") == "style") {
                 let value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")]
@@ -222,7 +221,6 @@ const edit = (element) => {
                 let prefix_index = prefix ? value.indexOf(prefix) : 0
                 let sufix = elem.getAttribute("data-sufix") == "rem" ? "px" : elem.getAttribute("data-sufix")
                 let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
-                console.log(window.getComputedStyle(element)[elem.getAttribute("data-name")])
                 value = window.getComputedStyle(element)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
                 elem.value = value
             } else if (elem.getAttribute("data-what") == "attribute")
@@ -235,7 +233,6 @@ const edit = (element) => {
                 elem.value = element.children[2].getAttribute("name").substring(17, element.children[2].getAttribute("name").length - 1)
             } else if (elem.getAttribute("data-what") == "agreement_text") {
                 elem.value = element.children[0].textContent
-                console.log(element)
             }
         }
     }
