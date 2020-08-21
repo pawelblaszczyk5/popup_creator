@@ -246,6 +246,22 @@
             height: 32px;
         }
 
+
+
+        .label-element {
+            display: none;
+        }
+
+        .panel__warning {
+            font-size: 16px;
+            color: white;
+            display: block;
+        }
+
+        .panel--row .label {
+            display: none;
+        }
+
         .left__toolbar {
             position: absolute;
             width: 40%;
@@ -334,7 +350,10 @@
             </div>
             <div class="right__panels">
                 <div id="element_settings" class="panel">
-                    <label class="label label-element label-p">
+                    <p class="panel__warning label-null label-element">
+                        Wybierz element do edycji
+                    </p>
+                    <label class="label label-element label-p label-img">
                         <span class="label-text label--checkbox">Czy ukryć na urządzeniach mobilnych?</span>
                         <input class="input input--element input--checkbox" data-what="hide" type="checkbox">
                     </label>
@@ -343,35 +362,35 @@
                             Paddingi
                         </span>
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingTop" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingRight" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingBottom" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
-                    <label class="label label-element label-wrap label-p">
+                    <label class="label label-element label-wrap label-p label-img label-input">
                         <span class="label-text label-text--wider">
                             Marginesy
                         </span>
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="marginTop" type="number" min="0" value="0">
+                            data-sufix="px" data-name="marginTop" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="marginRight" type="number" min="0" value="0">
+                            data-sufix="px" data-name="marginRight" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="marginBottom" type="number" min="0" value="0">
+                            data-sufix="px" data-name="marginBottom" type="number" min="0" value="0">
                         <input class="input input--element input--narrow input--standard" data-what="style"
-                            data-suffix="px" data-name="marginLeft" type="number" min="0" value="0">
+                            data-sufix="px" data-name="marginLeft" type="number" min="0" value="0">
                     </label>
-                    <label class="label label-element label-p">
+                    <label class="label label-element label-p label-img label-input">
                         <span class="label-text">Szerokość</span>
-                        <input data-what="style" data-suffix="px" data-name="width" type="number"
+                        <input data-what="style" data-sufix="px" data-name="width" type="number"
                             class="input input--element input--range input--standard">
                     </label>
-                    <label class="label label-element label-p">
+                    <label class="label label-element label-p label-img label-input">
                         <span class="label-text">Wysokość</span>
-                        <input data-what="style" data-suffix="px" data-name="height" type="number"
+                        <input data-what="style" data-sufix="px" data-name="height" type="number"
                             class="input input--element input--range input--standard">
                     </label>
                     <div class="wysiwyg label-element label-p" id="wysiwyg">
@@ -424,6 +443,38 @@
                         </div>
                         <p class="wysiwyg_content" id="wysiwyg_content">Test</p>
                     </div>
+                    <label class="label label-element label-img">
+                        <span class="label-text">Obrazek w tle</span>
+                        <input class="input input--element input--standard" data-what="attribute"
+                            data-editing_sufix="img" data-name="src" type="text">
+                    </label>
+                    <label class="label label-element label-img">
+                        <span class="label-text">Rozłożenie obrazka</span>
+                        <select class="input input--element input--standard" data-what="style" data-editing_sufix="img"
+                            data-name="object-fit">
+                            <option value="fill">Rozciągnij</option>
+                            <option value="contain">Zawrzyj</option>
+                            <option value="cover">Wypełnij</option>
+                        </select>
+                    </label>
+                    <label class="label label-element label-input">
+                        <span class="label-text">Rodzaj inputa</span>
+                        <select class="input input--element input--standard" data-what="attribute" data-name="name">
+                            <option value="sm-form-email">Mail</option>
+                            <option value="sm-form-name">Imię</option>
+                            <option value="sm-form-phone">Telefon</option>
+                            <option value="sm-form-company">Firma</option>
+                        </select>
+                    </label>
+                    <label class="label label-element label-input">
+                        <span class="label-text">Placeholder</span>
+                        <input class="input input--element input--standard" data-what="attribute"
+                            data-name="placeholder" type="text">
+                    </label>
+                    <label class="label label-element label-input">
+                        <span class="label-text label--checkbox">Czy pole ma być wymagane?</span>
+                        <input class="input input--element input--checkbox" data-what="required" type="checkbox">
+                    </label>
                 </div>
                 <div id="inputs_settings" class="panel">
                     <label class="label">
@@ -438,7 +489,7 @@
                     </label>
                     <label class="label">
                         <span class="label-text">Rozmiar fontu</span>
-                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="fontSize"
+                        <input data-editing=".input--text" data-what="style" data-sufix="px" data-name="fontSize"
                             type="number" class="input input--standard input--range" value="14">
                     </label>
                     <label class="label">
@@ -451,13 +502,13 @@
                             Paddingi
                         </span>
                         <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
-                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="7">
+                            data-sufix="px" data-name="paddingTop" type="number" min="0" value="7">
                         <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
-                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="7">
+                            data-sufix="px" data-name="paddingRight" type="number" min="0" value="7">
                         <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
-                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="7">
+                            data-sufix="px" data-name="paddingBottom" type="number" min="0" value="7">
                         <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
-                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="7">
+                            data-sufix="px" data-name="paddingLeft" type="number" min="0" value="7">
                     </label>
                     <label class="label">
                         <span class="label-text">Kolor ramki</span>
@@ -466,12 +517,12 @@
                     </label>
                     <label class="label">
                         <span class="label-text">Grubość ramki</span>
-                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="borderWidth"
+                        <input data-editing=".input--text" data-what="style" data-sufix="px" data-name="borderWidth"
                             type="number" min="0" max="15" class="input input--standard input--range" value="1">
                     </label>
                     <label class="label">
                         <span class="label-text">Zaokrąglenie ramki</span>
-                        <input data-editing=".input--text" data-what="style" data-suffix="px" data-name="borderRadius"
+                        <input data-editing=".input--text" data-what="style" data-sufix="px" data-name="borderRadius"
                             type="range" min="0" class="input input--standard input--range" value="0">
                     </label>
                     <label class="label">
@@ -480,32 +531,36 @@
                             data-editing=".container .checkmark::after, .checkmark" data-what="style"
                             data-name="borderColor" data-jscolor="" value="#000000">
                     </label>
+
                 </div>
-                <div id="row_settings" class="panel">
+                <div id="row_settings" class="panel panel--row">
+                    <p class="panel__warning label-null label-element">
+                        Wybierz element do edycji
+                    </p>
                     <label class="label label-wrap">
                         <span class="label-text label-text--wider">
                             Paddingi
                         </span>
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="paddingTop" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="paddingRight" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="paddingBottom" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label label-wrap">
                         <span class="label-text label-text--wider">
                             Marginesy
                         </span>
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="marginTop" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="marginRight" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="marginBottom" type="number" min="0" value="0">
-                        <input class="input input--row input--narrow" data-what="style" data-suffix="px"
+                        <input class="input input--row input--narrow" data-what="style" data-sufix="px"
                             data-name="marginLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label">
@@ -530,12 +585,12 @@
                 <div id="global_settings" class="panel">
                     <label class="label">
                         <span class="label-text">Szerokość popupa</span>
-                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-suffix="px"
+                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-sufix="px"
                             data-name="maxWidth" type="number" min="280" max="1200" value="600">
                     </label>
                     <label class="label">
                         <span class="label-text">Wysokość popupa</span>
-                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-suffix="px"
+                        <input class="input input--standard" data-editing="#wrapper" data-what="style" data-sufix="px"
                             data-name="height" type="number" max="650" min="300" value="600">
                     </label>
                     <label class="label label-wrap">
@@ -543,13 +598,13 @@
                             Paddingi
                         </span>
                         <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
-                            data-suffix="px" data-name="paddingTop" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingTop" type="number" min="0" value="0">
                         <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
-                            data-suffix="px" data-name="paddingRight" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingRight" type="number" min="0" value="0">
                         <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
-                            data-suffix="px" data-name="paddingBottom" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingBottom" type="number" min="0" value="0">
                         <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
-                            data-suffix="px" data-name="paddingLeft" type="number" min="0" value="0">
+                            data-sufix="px" data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label">
                         <span class="label-text">Wyrównanie w pionie</span>
@@ -570,7 +625,7 @@
                     <label class="label">
                         <span class="label-text">Obrazek w tle</span>
                         <input class="input input--standard" data-editing="#content::before" data-what="style"
-                            data-prefix="url('" data-suffix="')" data-name="backgroundImage" type="text">
+                            data-prefix="url('" data-sufix="')" data-name="backgroundImage" type="text">
                     </label>
                     <label class="label">
                         <span class="label-text">Wypełnienienie tła</span>
@@ -616,7 +671,7 @@
         </div>
     </template>
     <template class="template" id="input">
-        <input class="input--text" type="email">
+        <input class="input--text" name="sm-form-email" type="email">
     </template>
     <template class="template" id="checkbox">
         <label class="container">Przykładowy tekst

@@ -43,8 +43,8 @@ const add_style = (style, value, selector) => {
         }
     }
     if (selected_rule == null) {
-        shadowRoot.styleSheets[0].insertRule(`${selector}{}`, shadowRoot.styleSheets[0].rules.length)
-        selected_rule = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
+        shadowRoot.styleSheets[0].insertRule(`${selector}{}`, shadowRoot.styleSheets[0].rules.length - 2)
+        selected_rule = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 3]
     }
     selected_rule.style[style] = value
 }
@@ -71,7 +71,7 @@ const add_to_media = (style, value, selector, width) => {
 }
 const add_attribute = (attribute, value, element) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
-    console.log(shadowRoot.styleSheets[0])
+    shadowRoot.querySelector(element).setAttribute(attribute, value)
 
 }
 // function to place placeholder based on generated position and values
@@ -163,14 +163,32 @@ const calculate_placement = (x, y) => {
             remove_item(shadowRoot.getElementById("placeholder"))
     }
 }
-
+const del = (element) => {
+    for (let elem of document.getElementsByClassName("label-element"))
+        elem.style.display = !elem.classList.contains("label-null") ? "none" : "flex"
+    for (let elem of document.getElementById("row_settings").children) {
+        if (elem.classList.contains("panel__warning"))
+            elem.style.display = "flex"
+        else
+            elem.style.display = "none"
+    }
+    remove_item(element)
+    settings.editing = null
+}
 const edit = (element) => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
     document.getElementById("element_settings--trigger").click()
     if (!settings.editing || element.parentElement != settings.editing.parentElement) {
         for (let elem of document.getElementsByClassName("input--row")) {
-            if (elem.getAttribute("data-suffix"))
-                elem.value = parseInt(window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
-            else if (elem.tagName == "SELECT")
+            if (elem.getAttribute("data-what") == "style") {
+                let value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")]
+                let prefix = elem.getAttribute("data-prefix")
+                let prefix_index = prefix ? value.indexOf(prefix) : 0
+                let sufix = elem.getAttribute("data-sufix")
+                let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
+                value = window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
+                elem.value = value
+            } else if (elem.tagName == "SELECT")
                 for (let i = 0; i < elem.children.length; i++)
                     if (elem.children[i].value == window.getComputedStyle(element.parentElement)[elem.getAttribute("data-name")])
                         elem.selectedIndex = i
@@ -178,21 +196,41 @@ const edit = (element) => {
     }
     settings.editing = element
     let template = element.id.substring(0, element.id.indexOf("_"))
-    console.log(template)
     document.getElementById("wysiwyg_content").contentEditable = template == "p" ? true : false
     if (template == "p")
         document.getElementById("wysiwyg_content").innerHTML = element.innerHTML
     for (let elem of document.getElementsByClassName("label-element"))
         elem.style.display = !elem.classList.contains("label-" + template) ? "none" : "flex"
     for (let elem of document.getElementsByClassName("input--element")) {
+        element = elem.getAttribute("data-editing_sufix") ? shadowRoot.querySelector("#" + settings.editing.id + " " + elem.getAttribute("data-editing_sufix")) : settings.editing
         if (elem.parentElement.style.display == "flex") {
-            console.log(elem.getAttribute("data-what"), elem.getAttribute("data-name"))
-            if (elem.getAttribute("data-what") == "style") {
-                console.log(window.getComputedStyle(element)[elem.getAttribute("data-name")])
-                if (elem.getAttribute("data-suffix") == "px")
-                    elem.value = parseInt(window.getComputedStyle(element)[elem.getAttribute("data-name")])
-            }
+            if (elem.tagName == "SELECT" && elem.getAttribute("data-what") == "style") {
+                for (let i = 0; i < elem.children.length; i++)
+                    if (elem.children[i].value == window.getComputedStyle(element)[elem.getAttribute("data-name")])
+                        elem.selectedIndex = i
+            } else if (elem.tagName == "SELECT" && elem.getAttribute("data-what") == "attribute") {
+                for (let i = 0; i < elem.children.length; i++)
+                    if (elem.children[i].value == element.getAttribute(elem.getAttribute("data-name")))
+                        elem.selectedIndex = i
+            } else if (elem.getAttribute("data-what") == "style") {
+                let value = window.getComputedStyle(element)[elem.getAttribute("data-name")]
+                let prefix = elem.getAttribute("data-prefix")
+                let prefix_index = prefix ? value.indexOf(prefix) : 0
+                let sufix = elem.getAttribute("data-sufix")
+                let sufix_index = sufix ? value.indexOf(sufix) : value.length - 1
+                value = window.getComputedStyle(element)[elem.getAttribute("data-name")].substring(prefix_index, sufix_index)
+                elem.value = value
+            } else if (elem.getAttribute("data-what") == "attribute") {
+                elem.value = element.getAttribute(elem.getAttribute("data-name"))
+            } else if (elem.getAttribute("data-what") == "hide")
+                elem.checked = element.classList.contains("mobile_hide")
         }
+    }
+    for (let elem of document.getElementById("row_settings").children) {
+        if (!elem.classList.contains("panel__warning"))
+            elem.style.display = "flex"
+        else
+            elem.style.display = "none"
     }
 }
 // function to drag elements around
@@ -208,6 +246,17 @@ const drag = function (e) {
     element.style.borderColor = "black"
     element.style.color = "black"
 
+    if (!what.classList.contains("draggable_item")) {
+        let trash = document.createElement("div")
+        trash.style.width = "80px"
+        trash.style.height = "80px"
+        trash.style.backgroundColor = 'rgba(255, 0, 0, 0.2)'
+        trash.style.position = "absolute"
+        trash.style.left = "0px"
+        trash.style.top = "0px"
+        trash.id = "trash"
+        document.body.appendChild(trash)
+    }
     const up = function (e) {
         e.preventDefault();
         window.removeEventListener("mousemove", move)
@@ -225,6 +274,11 @@ const drag = function (e) {
                 item_to_place.addEventListener("click", function (e) {
                     edit(this)
                 })
+                if (what.getAttribute("data-template_id") == "input") {
+                    item_to_place.addEventListener("input", (e) => {
+                        e.preventDefault()
+                    })
+                }
                 item_to_place.addEventListener("dblclick", drag)
             } else
                 item_to_place = what
@@ -236,7 +290,13 @@ const drag = function (e) {
                 document.getElementById("popup").setAttribute("data-row_counter", number)
             }
             remove_item(shadowRoot.getElementById("placeholder"))
+        } else {
+            if (!what.classList.contains("draggable_item"))
+                if (Array.from(document.querySelectorAll(":hover")).indexOf(trash) != -1)
+                    del(what)
         }
+        if (document.getElementById("trash"))
+            remove_item(document.getElementById("trash"))
         clean_rows()
     }
     const move = function (e) {
@@ -337,6 +397,7 @@ const initialize = () => {
                 .img img{
                     display: block;
                     width: 100%;
+                    height: 100%;
                 }
                 .p{
                     font-size: 16rem;
@@ -431,16 +492,35 @@ const initialize = () => {
             let input = e.target
             let shadowRoot = document.getElementById("popup").shadowRoot
             if (input.checkValidity()) {
-                let editing = input.getAttribute("data-editing") != null ? input.getAttribute("data-editing") : ("#" + settings.editing.id)
-                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
+                let editing = input.getAttribute("data-editing")
+                if (editing == null && settings.editing != null)
+                    editing = "#" + settings.editing.id
+                if (editing == null)
+                    return false
+                if (input.getAttribute("data-editing_sufix") == "img")
+                    editing += " img"
+                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-sufix") || "")
+                if ((input.getAttribute("data-name") == "height" || input.getAttribute("data-name") == "width") && input.value == "" && !input.getAttribute("data-editing"))
+                    value = "auto"
                 switch (input.getAttribute("data-what")) {
                     case "style":
                         add_style(input.getAttribute("data-name"), value, editing)
                         break
                     case "attribute":
+                        add_attribute(input.getAttribute("data-name"), value, editing)
+                        if (value == "sm-form-name")
+                            add_attribute("type", "text", editing)
+                        else if (value == "sm-form-phone")
+                            add_attribute("type", "tel", editing)
+                        else if (value == "sm-form-mail")
+                            add_attribute("type", "email", editing)
+                        else if (value == "sm-form-company")
+                            add_attribute("type", "text", editing)
+                        if (value == "sm-form-name" || value == "sm-form-phone" || value == "sm-form-mail" || value == "sm-form-company")
+                            shadowRoot.querySelector(editing).value = ""
                         break
                 }
-                if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "maxWidth") {
+                if (editing == "#" + shadowRoot.getElementById("wrapper").id && input.getAttribute("data-name") == "maxWidth") {
                     document.getElementById("popup").style.width = input.value + "px"
                     settings.width = input.value
                 } else if (editing == shadowRoot.getElementById("wrapper") && input.getAttribute("data-name") == "height") {
@@ -464,8 +544,12 @@ const initialize = () => {
         element.addEventListener("input", (e) => {
             let input = e.target
             if (input.checkValidity()) {
-                let editing = "#" + settings.editing.parentElement.id
-                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-suffix") || "")
+                let editing
+                if (settings.editing != null)
+                    editing = "#" + settings.editing.parentElement.id
+                else
+                    return false
+                let value = (input.getAttribute("data-prefix") || "") + input.value + (input.getAttribute("data-sufix") || "")
                 switch (input.getAttribute("data-what")) {
                     case "style":
                         add_style(input.getAttribute("data-name"), value, editing)
@@ -478,9 +562,16 @@ const initialize = () => {
     }
     for (let element of document.getElementsByClassName("input--checkbox")) {
         element.addEventListener("input", (e) => {
-            if (settings.editing != null)
+            if (settings.editing != null) {
                 if (e.target.getAttribute("data-what") == "hide")
                     settings.editing.classList.toggle("mobile_hide")
+                else if (e.target.getAttribute("data-what") == "required") {
+                    if (e.target.checked)
+                        settings.editing.setAttribute("required", "")
+                    else
+                        settings.editing.removeAttribute("required")
+                }
+            }
         })
     }
 }
@@ -509,7 +600,6 @@ initialize();
         wysiwyg.focus()
     })
     wysiwyg.addEventListener("input", () => {
-        console.log(settings.editing)
         if (settings.editing.classList.contains("p"))
             settings.editing.innerHTML = wysiwyg.innerHTML
     })
