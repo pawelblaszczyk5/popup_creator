@@ -2,6 +2,7 @@ let settings = {
     editing: null,
     width: 600,
     height: 600,
+    view: "desktop",
 }
 const picker1 = new JSColor(document.getElementById("colorPicker1"), {
     'format': 'rgba',
@@ -52,11 +53,10 @@ const add_to_media = (style, value, selector, width) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
     let media
     let selected_rule
-    for (let rule of shadowRoot.styleSheets[0].rules) {
-        if (rule.conditionText)
-            if (rule.conditionText.indexOf(width + "px") != -1)
-                media = rule
-    }
+    if (width == 500)
+        media = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 2]
+    if (width == 280)
+        media = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
     for (let rule of media.cssRules) {
         if (rule.selectorText == selector) {
             selected_rule = rule
@@ -68,11 +68,11 @@ const add_to_media = (style, value, selector, width) => {
         selected_rule = media.cssRules[(media.cssRules.length) - 1]
     }
     selected_rule.style[style] = value
+    console.log(media)
 }
 const add_attribute = (attribute, value, element) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
     shadowRoot.querySelector(element).setAttribute(attribute, value)
-
 }
 // function to place placeholder based on generated position and values
 const place_placeholder = (placement) => {
@@ -243,84 +243,321 @@ const edit = (element) => {
             elem.style.display = "none"
     }
 }
+const clean_media = () => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    let media1 = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 2]
+    let media2 = shadowRoot.styleSheets[0].rules[shadowRoot.styleSheets[0].rules.length - 1]
+    for (let i = 0; i < media1.cssRules.length; i++) {
+        if (media1.cssRules[i].selectorText.indexOf(".") == -1) {
+            media1.deleteRule(i)
+        }
+    }
+    for (let i = 0; i < media2.cssRules.length; i++) {
+        if (media2.cssRules[i].selectorText.indexOf(".") == -1) {
+            media2.deleteRule(i)
+        }
+    }
+}
 // function to drag elements around
 const drag = function (e) {
-    let element = this.cloneNode(true);
-    let what = this
-    document.body.appendChild(element)
-    element.style.position = "absolute"
-    element.style.left = e.clientX + "px"
-    element.style.top = e.clientY + "px"
-    element.style.width = this.getBoundingClientRect().width + "px"
-    element.style.height = this.getBoundingClientRect().height + "px"
-    element.style.borderColor = "black"
-    element.style.color = "black"
+    if (settings.view == "desktop") {
+        let element = this.cloneNode(true);
+        let what = this
+        document.body.appendChild(element)
+        element.style.position = "absolute"
+        element.style.left = e.clientX + "px"
+        element.style.top = e.clientY + "px"
+        element.style.width = this.getBoundingClientRect().width + "px"
+        element.style.height = this.getBoundingClientRect().height + "px"
+        element.style.borderColor = "black"
+        element.style.color = "black"
+        element.style.fontSize = "16px"
 
-    if (!what.classList.contains("draggable_item")) {
-        let trash = document.createElement("div")
-        trash.style.width = "80px"
-        trash.style.height = "80px"
-        trash.style.backgroundColor = 'rgba(255, 0, 0, 0.2)'
-        trash.style.position = "absolute"
-        trash.style.left = "0px"
-        trash.style.top = "0px"
-        trash.id = "trash"
-        document.body.appendChild(trash)
-    }
-    const up = function (e) {
-        e.preventDefault();
-        window.removeEventListener("mousemove", move)
-        window.removeEventListener("mouseup", up)
-        element.parentElement.removeChild(element)
-        let shadowRoot = document.getElementById("popup").shadowRoot
-        if (shadowRoot.getElementById("placeholder")) {
-            let item_to_place
-            if (what.classList.contains("draggable_item")) {
-                item_to_place = document.importNode(document.getElementById(what.getAttribute("data-template_id")).content, true)
-                item_to_place = item_to_place.children[0]
-                item_to_place.id = what.getAttribute("data-template_id") + "_" + what.getAttribute("data-template_counter")
-                item_to_place.classList.add(what.getAttribute("data-template_id"))
-                what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
-                item_to_place.addEventListener("click", function (e) {
-                    edit(this)
-                })
-                if (what.getAttribute("data-template_id") == "input") {
-                    item_to_place.addEventListener("input", (e) => {
-                        e.preventDefault()
+        if (!what.classList.contains("draggable_item")) {
+            let trash = document.createElement("div")
+            trash.style.width = "80px"
+            trash.style.height = "80px"
+            trash.textContent = "\uF1F8"
+            trash.style.fontFamily = "icons"
+            trash.style.fontSize = "35px"
+            trash.style.textAlign = "center"
+            trash.style.lineHeight = "80px"
+            trash.style.backgroundColor = 'rgba(255, 0, 0, 0.3)'
+            trash.style.position = "absolute"
+            trash.style.left = "0px"
+            trash.style.top = "0px"
+            trash.id = "trash"
+            document.body.appendChild(trash)
+        }
+        const up = function (e) {
+            e.preventDefault();
+            window.removeEventListener("mousemove", move)
+            window.removeEventListener("mouseup", up)
+            element.parentElement.removeChild(element)
+            let shadowRoot = document.getElementById("popup").shadowRoot
+            if (shadowRoot.getElementById("placeholder")) {
+                let item_to_place
+                if (what.classList.contains("draggable_item")) {
+                    item_to_place = document.importNode(document.getElementById(what.getAttribute("data-template_id")).content, true)
+                    item_to_place = item_to_place.children[0]
+                    item_to_place.id = what.getAttribute("data-template_id") + "_" + what.getAttribute("data-template_counter")
+                    item_to_place.classList.add(what.getAttribute("data-template_id"))
+                    what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
+                    item_to_place.addEventListener("click", function (e) {
+                        if (settings.view == "desktop")
+                            edit(this)
                     })
+                    if (what.getAttribute("data-template_id") == "input") {
+                        item_to_place.addEventListener("input", (e) => {
+                            e.preventDefault()
+                        })
+                    }
+                    item_to_place.addEventListener("dblclick", drag)
+                } else
+                    item_to_place = what
+                shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
+                if (!shadowRoot.getElementById("placeholder").parentElement.id) {
+                    let number = parseInt(document.getElementById("popup").getAttribute("data-row_counter"))
+                    number++
+                    shadowRoot.getElementById("placeholder").parentElement.id = "row_" + number
+                    document.getElementById("popup").setAttribute("data-row_counter", number)
                 }
-                item_to_place.addEventListener("dblclick", drag)
-            } else
-                item_to_place = what
-            shadowRoot.getElementById("placeholder").parentElement.insertBefore(item_to_place, shadowRoot.getElementById("placeholder"))
-            if (!shadowRoot.getElementById("placeholder").parentElement.id) {
-                let number = parseInt(document.getElementById("popup").getAttribute("data-row_counter"))
-                number++
-                shadowRoot.getElementById("placeholder").parentElement.id = "row_" + number
-                document.getElementById("popup").setAttribute("data-row_counter", number)
+                remove_item(shadowRoot.getElementById("placeholder"))
+            } else {
+                if (!what.classList.contains("draggable_item"))
+                    if (Array.from(document.querySelectorAll(":hover")).indexOf(trash) != -1)
+                        del(what)
             }
-            remove_item(shadowRoot.getElementById("placeholder"))
-        } else {
-            if (!what.classList.contains("draggable_item"))
-                if (Array.from(document.querySelectorAll(":hover")).indexOf(trash) != -1)
-                    del(what)
+            if (document.getElementById("trash"))
+                remove_item(document.getElementById("trash"))
+            clean_rows()
         }
-        if (document.getElementById("trash"))
-            remove_item(document.getElementById("trash"))
-        clean_rows()
+        const move = function (e) {
+            e.preventDefault();
+            element.style.left = e.clientX + 10 + "px"
+            element.style.top = e.clientY + 10 + "px"
+            calculate_placement(e.clientX, e.clientY)
+            let placement = calculate_placement(e.clientX, e.clientY)
+            if (placement) {
+                place_placeholder(placement)
+            }
+        }
+        window.addEventListener("mouseup", up)
+        window.addEventListener("mousemove", move)
     }
-    const move = function (e) {
-        e.preventDefault();
-        element.style.left = e.clientX + 10 + "px"
-        element.style.top = e.clientY + 10 + "px"
-        calculate_placement(e.clientX, e.clientY)
-        let placement = calculate_placement(e.clientX, e.clientY)
-        if (placement) {
-            place_placeholder(placement)
+}
+const get_height = () => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    let height = 0
+    for (let element of shadowRoot.querySelectorAll(".row")) {
+        height += element.getBoundingClientRect().height
+        height += parseInt(window.getComputedStyle(element)["marginTop"])
+        height += parseInt(window.getComputedStyle(element)["marginBottom"])
+    }
+    height += parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingTop"])
+    height += parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingBottom"])
+    return height
+}
+const responsivness = (width) => {
+    //prio paddings inside > margins > paddings >img > text
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    let responsivness_settings = {
+        min_padding: 10,
+        min_margin: 10,
+        min_basefont: 0.85,
+        min_img_width: 0.85,
+        max_input_width: 0.95
+    }
+    for (let element of shadowRoot.querySelectorAll(".row")) {
+        for (let elem of element.children) {
+            if (!elem.parentElement.classList.contains("row--nowrap") && elem.parentElement.children.length > 1)
+                elem.classList.add("margin_inside_row")
+            else
+                elem.classList.remove("margin_inside_row")
         }
     }
-    window.addEventListener("mouseup", up)
-    window.addEventListener("mousemove", move)
+    clean_media()
+    if (get_height() > 600) {
+        let elements = []
+        for (let element of shadowRoot.querySelectorAll(".row"))
+            for (let elem of element.children)
+                elements.push(elem)
+        let diff = get_height() - 600
+        let reduce_padding_top = []
+        let reduce_padding_bottom = []
+
+        for (let element of elements)
+            if (parseInt(window.getComputedStyle(element)["paddingTop"]) > responsivness_settings.min_padding)
+                reduce_padding_top.push(element)
+        for (let element of elements)
+            if (parseInt(window.getComputedStyle(element)["paddingBottom"]) > responsivness_settings.min_padding)
+                reduce_padding_bottom.push(element)
+        let element_count = reduce_padding_top.length + reduce_padding_bottom.length
+        for (let element of reduce_padding_top) {
+            let temp = parseInt(window.getComputedStyle(element)["paddingTop"]) - (diff / element_count)
+            let new_padding_top = temp > responsivness_settings.min_padding ? temp : responsivness_settings.min_padding
+            add_to_media("paddingTop", new_padding_top + "px", "#" + element.id, width)
+        }
+        for (let element of reduce_padding_bottom) {
+            let temp = parseInt(window.getComputedStyle(element)["paddingBottom"]) - (diff / element_count)
+            let new_padding_bottom = temp > responsivness_settings.min_padding ? temp : responsivness_settings.min_padding
+            add_to_media("paddingBottom", new_padding_bottom + "px", "#" + element.id, width)
+        }
+        if (get_height() > 600) {
+            let diff = get_height() - 600
+            let reduce_margin_top = []
+            let reduce_margin_bottom = []
+
+            for (let element of elements)
+                if (parseInt(window.getComputedStyle(element)["marginTop"]) > responsivness_settings.min_margin)
+                    reduce_margin_top.push(element)
+            for (let element of elements)
+                if (parseInt(window.getComputedStyle(element)["marginBottom"]) > responsivness_settings.min_margin)
+                    reduce_margin_bottom.push(element)
+            let element_count = reduce_margin_top.length + reduce_margin_bottom.length
+            for (let element of reduce_margin_top) {
+                let temp = parseInt(window.getComputedStyle(element)["marginTop"]) - (diff / element_count)
+                let new_margin_top = temp > responsivness_settings.min_margin ? temp : responsivness_settings.min_margin
+                add_to_media("marginTop", new_margin_top + "px", "#" + element.id, width)
+            }
+            for (let element of reduce_margin_bottom) {
+                let temp = parseInt(window.getComputedStyle(element)["marginBottom"]) - (diff / element_count)
+                let new_margin_bottom = temp > responsivness_settings.min_margin ? temp : responsivness_settings.min_margin
+                add_to_media("marginBottom", new_margin_bottom + "px", "#" + element.id, width)
+            }
+            if (get_height() > 600) {
+                let diff = get_height() - 600
+                let padding_top = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingTop"])
+                let padding_bottom = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingBottom"])
+                let padding_left = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingLeft"])
+                let padding_right = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingRight"])
+                let count = 0
+                if (padding_top > 0)
+                    count++
+                if (padding_bottom > 0)
+                    count++
+                diff = diff / count
+                if (padding_left > responsivness_settings.min_padding)
+                    add_to_media("paddingLeft", responsivness_settings.min_padding + "px", "#content", width)
+                if (padding_right > responsivness_settings.min_padding)
+                    add_to_media("paddingRight", responsivness_settings.min_padding + "px", "#content", width)
+                if (padding_top != 0) {
+                    let temp = ((padding_top - diff) > responsivness_settings.min_padding) ? (padding_top - diff) : responsivness_settings.min_padding
+                    add_to_media("paddingTop", temp + "px", "#content", width)
+                }
+                if (padding_bottom != 0) {
+                    let temp2 = ((padding_bottom - diff) > responsivness_settings.min_padding) ? (padding_bottom - diff) : responsivness_settings.min_padding
+                    add_to_media("paddingBottom", temp2 + "px", "#content", width)
+                }
+                if (get_height() > 600) {
+                    let imgs = []
+                    for (let element of elements) {
+                        if (element.classList.contains("img"))
+                            imgs.push(element)
+                    }
+                    for (let element of imgs) {
+                        let img_width = parseInt(window.getComputedStyle(element)["width"]) * responsivness_settings.min_img_width
+                        let img_height = parseInt(window.getComputedStyle(element)["height"]) * responsivness_settings.min_img_width
+                        add_to_media("width", img_width + "px", "#" + element.id, width)
+                        add_to_media("height", img_height + "px", "#" + element.id, width)
+                    }
+                    if (get_height() > 600) {
+                        let fontBase = 0.98
+                        while (fontBase > responsivness_settings.min_basefont && get_height() > 600) {
+                            add_to_media("fontSize", fontBase + "px", "html", width)
+                            document.getElementsByTagName("html")[0].style.fontSize = fontBase + "px"
+                            fontBase -= 0.02
+                        }
+                        if (get_height() > 600)
+                            return false
+                    }
+                }
+            }
+        }
+    }
+}
+const switch_view = (view) => {
+    for (let elem of document.getElementsByClassName("label-element"))
+        elem.style.display = !elem.classList.contains("label-null") ? "none" : "flex"
+    for (let elem of document.getElementById("row_settings").children) {
+        if (elem.classList.contains("panel__warning"))
+            elem.style.display = "flex"
+        else
+            elem.style.display = "none"
+    }
+    settings.editing = null
+    if (get_height() < settings.height) {
+        let shadowRoot = document.getElementById("popup").shadowRoot
+        let rules = shadowRoot.styleSheets[0].rules
+        rules[rules.length - 2].media.mediaText = "screen"
+        rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+        document.getElementById("popup").style.width = "500px"
+        let tablet = responsivness(500)
+        rules[rules.length - 2].media.mediaText = "screen"
+        rules[rules.length - 1].media.mediaText = "screen"
+        document.getElementById("popup").style.width = "280px"
+        let mobile = responsivness(280)
+        if (tablet == false || mobile == false) {
+            rules[rules.length - 2].media.mediaText = "screen and (max-width: 500px)"
+            rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+            document.getElementById("warning_modal").style.display = "flex"
+            document.getElementById("warning_modal").children[0].textContent = "Twój popup nie zmieści się na małych urządzeniach"
+            document.getElementById("popup").style.width = settings.width + "px"
+            document.getElementsByTagName("html")[0].style.fontSize = 1 + "px"
+            settings.view = "desktop"
+            return false
+        }
+        if (view != settings.view) {
+            settings.view = view
+            switch (view) {
+                case "desktop":
+                    rules[rules.length - 2].media.mediaText = "screen and (max-width: 500px)"
+                    rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+                    document.getElementById("popup").style.width = settings.width + "px"
+                    document.getElementsByTagName("html")[0].style.fontSize = 1 + "px"
+                    break;
+                case "tablet":
+                    rules[rules.length - 2].media.mediaText = "screen"
+                    rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+                    document.getElementById("popup").style.width = "500px"
+                    break;
+                case "mobile":
+                    rules[rules.length - 2].media.mediaText = "screen"
+                    rules[rules.length - 1].media.mediaText = "screen"
+                    document.getElementById("popup").style.width = "280px"
+                    break;
+            }
+        }
+    } else {
+        document.getElementById("warning_modal").style.display = "flex"
+        document.getElementById("warning_modal").children[0].textContent = "Twój popup się nie mieści"
+    }
+}
+const save_html = () => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+
+    let textarea = document.getElementById("html_textarea")
+    textarea.textContent = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>`
+    for (element of shadowRoot.styleSheets[0].rules)
+        textarea.textContent += element.cssText
+    textarea.textContent += `</style>
+</head>
+<body>
+    <div id="wrapper">
+    <div id="content">`
+    textarea.textContent += shadowRoot.querySelector("#content").innerHTML
+    textarea.textContent += `</div>
+    </div>
+    </body>
+</html>`
+    textarea.parentElement.style.display = "grid"
 }
 const initialize = () => {
     //generate list of draggable elements
@@ -328,7 +565,8 @@ const initialize = () => {
     for (let element of document.getElementsByClassName("template")) {
         let div = document.createElement("div")
         div.className = "draggable_item"
-        div.textContent = "P"
+        div.textContent = element.getAttribute("data-text")
+        div.style.fontFamily = "icons"
         div.setAttribute("data-template_id", element.id)
         div.setAttribute("data-template_counter", 0)
         tools.appendChild(div)
@@ -366,6 +604,9 @@ const initialize = () => {
             })
             const style = document.createElement('style');
             style.textContent = `
+                html{
+                    font-size: 1px;
+                }
                 * {
                     margin: 0;
                     padding: 0;
@@ -400,7 +641,6 @@ const initialize = () => {
                     width: 100%;
                     display: flex;
                     flex-direction: row;
-                    border: 1px solid red;
                     justify-content: space-evenly;
                     align-items: center;
                 }
@@ -487,6 +727,9 @@ const initialize = () => {
                     }
                     .row--nowrap{
                         flex-direction: row;
+                    }
+                    .margin_inside_row{
+                        margin: 3px 0;
                     }
                 }
                 @media screen and (max-width: 280px)
@@ -605,6 +848,48 @@ const initialize = () => {
     document.getElementById("agreement_text").addEventListener("input", (e) => {
         settings.editing.children[0].textContent = e.target.value
     })
+    document.getElementById("desktop").addEventListener("click", () => {
+        switch_view("desktop")
+    })
+    document.getElementById("tablet").addEventListener("click", () => {
+        switch_view("tablet")
+    })
+    document.getElementById("mobile").addEventListener("click", () => {
+        switch_view("mobile")
+    })
+    document.getElementById("close_modal").addEventListener("click", (e) => {
+        e.target.parentElement.style.display = "none"
+    })
+    document.getElementById("close_modal2").addEventListener("click", (e) => {
+        e.target.parentElement.style.display = "none"
+    })
+    document.getElementById("save").addEventListener("click", () => {
+        let shadowRoot = document.getElementById("popup").shadowRoot
+        let rules = shadowRoot.styleSheets[0].rules
+        rules[rules.length - 2].media.mediaText = "screen"
+        rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+        document.getElementById("popup").style.width = "500px"
+        let tablet = responsivness(500)
+        rules[rules.length - 2].media.mediaText = "screen"
+        rules[rules.length - 1].media.mediaText = "screen"
+        document.getElementById("popup").style.width = "280px"
+        let mobile = responsivness(280)
+        if (tablet == false || mobile == false) {
+            rules[rules.length - 2].media.mediaText = "screen and (max-width: 500px)"
+            rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+            document.getElementById("popup").style.width = settings.width + "px"
+            document.getElementById("warning_modal").style.display = "flex"
+            document.getElementById("warning_modal").children[0].textContent = "Twój popup nie zmieści się na małych urządzeniach"
+            document.getElementsByTagName("html")[0].style.fontSize = 1 + "px"
+            settings.view = "desktop"
+            return false
+        } else {
+            rules[rules.length - 2].media.mediaText = "screen and (max-width: 500px)"
+            rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
+            document.getElementById("popup").style.width = settings.width + "px"
+            save_html()
+        }
+    })
 }
 initialize();
 
@@ -631,6 +916,11 @@ initialize();
         wysiwyg.focus()
     })
     wysiwyg.addEventListener("input", () => {
+        let elements = wysiwyg.getElementsByTagName("*")
+        for (let element of elements) {
+            if (element.style.fontSize.indexOf("px") != -1)
+                element.style.fontSize = element.style.fontSize.substring(0, element.style.fontSize.indexOf("px")) + "rem"
+        }
         if (settings.editing.classList.contains("p"))
             settings.editing.innerHTML = wysiwyg.innerHTML
     })

@@ -184,6 +184,7 @@
         }
 
         .wysiwyg_content {
+            overflow: scroll;
             height: 100%;
             font-size: 1px;
             font-size: 16rem;
@@ -239,6 +240,24 @@
             align-items: center;
             border-radius: 10px;
             display: none;
+            padding: 15px;
+        }
+
+        .modal_text {
+            font-size: 16px;
+            color: white;
+        }
+
+        .modal_close {
+            border: none;
+            background: none;
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
         }
 
         .input--range {
@@ -309,7 +328,7 @@
             display: grid;
             place-items: center;
             color: white;
-            font-size: 26px;
+            font-size: 29px;
             cursor: pointer;
         }
 
@@ -319,6 +338,43 @@
             height: 600px;
             border: 1px solid blue;
             margin-top: 15px;
+        }
+
+        .left__buttons {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 10px;
+            display: flex;
+        }
+
+        .settings__button {
+            font-family: 'icons';
+            height: 30px;
+            width: 30px;
+            border: none;
+            border-radius: 0;
+            margin: 2px;
+            color: white;
+            font-size: 14px;
+            background-color: #2F4050;
+        }
+
+        .html_code {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: 5;
+            background-color: #2F4050;
+            display: grid;
+            place-items: center;
+            display: none;
+        }
+
+        .html_textarea {
+            width: 80%;
+            height: 80%;
+            resize: none;
         }
     </style>
 </head>
@@ -333,6 +389,12 @@
                 </p>
                 <div id="tools" class="toolbar__tools">
                 </div>
+            </div>
+            <div class="left__buttons">
+                <button id="desktop" class="settings__button"></button>
+                <button id="tablet" class="settings__button"></button>
+                <button id="mobile" class="settings__button"></button>
+                <button id="save" class="settings__button"></button>
             </div>
         </div>
         <div class="wrapper__right">
@@ -435,7 +497,7 @@
                                 <option value="82">82px</option>
                             </select>
                             <input id="input_color" class="wysiwyg_button wysiwyg_color">
-                            <button id="btn_color" class="wysiwyg_button"></button>
+                            <button id="btn_color" class="wysiwyg_button"></button>
 
                             <select id="select_fontname" class="wysiwyg_select wysiwyg_button--margin-left">
                                 <option selected value="none">Nazwa fontu</option>
@@ -479,7 +541,7 @@
                         <span class="label-text label--checkbox">Czy pole ma być wymagane?</span>
                         <input class="input input--element input--checkbox" data-what="required" type="checkbox">
                     </label>
-                    <label class="label label-element label-input label-submit">
+                    <label class="label label-element label-submit">
                         <span class="label-text">Tekst na przycisku</span>
                         <input class="input input--element input--standard" data-what="attribute" data-name="value"
                             type="text">
@@ -689,19 +751,29 @@
                 id="wysiwyg_href">
             <button id="btn_addhref" class="wysiwyg_button wysiwyg_button--alt"></button>
         </div>
+        <div id="warning_modal" class="wysiwyg_modal">
+            <p class="modal_text">
+            </p>
+            <button id="close_modal" class="modal_close">x</button>
+        </div>
+        <div id="html_code" class="html_code">
+            <button id="close_modal2" class="modal_close">x</button>
+
+            <textarea id="html_textarea" class="html_textarea"></textarea>
+        </div>
     </div>
-    <template class="template" id="p">
+    <template class="template" id="p" data-text="">
         <p>Przykładowy tekst</p>
     </template>
-    <template class="template" id="img">
+    <template class="template" id="img" data-text="">
         <div>
             <img src="https://www.w3schools.com/w3css/img_lights.jpg">
         </div>
     </template>
-    <template class="template" id="input">
+    <template class="template" id="input" data-text="">
         <input class="input--text" name="sm-form-email" type="email">
     </template>
-    <template class="template" id="checkbox">
+    <template class="template" id="checkbox" data-text="">
         <label class="container">
             <span class="agreement_placeholder">Przykładowy tekst</span>
             <span class="agreement_text">$sm-consent.desc.NAZWA_ZGODY$</span>
@@ -710,7 +782,7 @@
             <span class="checkmark"></span>
         </label>
     </template>
-    <template class="template" id="submit">
+    <template class="template" id="submit" data-text="">
         <input type="submit" class="input--submit" value="Wyślij">
     </template>
     <script src="app.js"></script>
