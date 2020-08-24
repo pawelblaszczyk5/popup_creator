@@ -3,7 +3,7 @@ let settings = {
     width: 600,
     height: 600,
     view: "desktop",
-    lang: "PL"
+    lang: "pl"
 }
 const picker1 = new JSColor(document.getElementById("colorPicker1"), {
     'format': 'rgba',
@@ -541,7 +541,7 @@ const switch_view = (view) => {
             rules[rules.length - 2].media.mediaText = "screen and (max-width: 500px)"
             rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
             document.getElementById("warning_modal").style.display = "flex"
-            document.getElementById("warning_modal").children[0].textContent = "Twój popup nie zmieści się na małych urządzeniach"
+            document.getElementById("warning_modal").children[0].textContent = settings.lang == "pl" ? "Twój popup nie zmieści się na małych urządzeniach" : "Your popup will not fit on mobile"
             document.getElementById("popup").style.width = settings.width + "px"
             document.getElementsByTagName("html")[0].style.fontSize = 1 + "px"
             settings.view = "desktop"
@@ -570,7 +570,7 @@ const switch_view = (view) => {
         }
     } else {
         document.getElementById("warning_modal").style.display = "flex"
-        document.getElementById("warning_modal").children[0].textContent = "Twój popup się nie mieści"
+        document.getElementById("warning_modal").children[0].textContent = settings.lang == "pl" ? "Twój popup się nie mieści" : "Your popup is too big"
     }
 }
 const save_html = () => {
@@ -664,6 +664,7 @@ const initialize = () => {
                     box-sizing: border-box;
                 }
                 #wrapper{
+                    font-family: "Open sans", sans-serif;
                     max-width: 600px;
                     min-width: 280px;
                     width: 100%;
@@ -939,7 +940,7 @@ const initialize = () => {
             rules[rules.length - 1].media.mediaText = "screen and (max-width: 280px)"
             document.getElementById("popup").style.width = settings.width + "px"
             document.getElementById("warning_modal").style.display = "flex"
-            document.getElementById("warning_modal").children[0].textContent = "Twój popup nie zmieści się na małych urządzeniach"
+            document.getElementById("warning_modal").children[0].textContent = settings.lang == "pl" ? "Twój popup nie zmieści się na małych urządzeniach" : "Your popup will not fit on mobile"
             document.getElementsByTagName("html")[0].style.fontSize = 1 + "px"
             settings.view = "desktop"
             return false
