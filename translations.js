@@ -209,6 +209,10 @@ const translations = [{
         pl: "Wysokość popupa"
     },
     {
+        en: "Font Family",
+        pl: "Nazwa fontu"
+    },
+    {
         en: "Paddings",
         pl: "Paddingi"
     },
