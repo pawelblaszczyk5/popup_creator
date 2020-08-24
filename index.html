@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drag&Drop v2</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet">
     <script src="jscolor.js"></script>
+    <script src="translations.js"></script>
     <style>
         @font-face {
             font-family: 'icons';
@@ -376,6 +382,10 @@
             height: 80%;
             resize: none;
         }
+
+        .lang--button {
+            font-family: 'Open Sans', sans-serif;
+        }
     </style>
 </head>
 
@@ -384,13 +394,14 @@
         <div class="wrapper__left">
             <popup-container id="popup" class="popup_container"></popup-container>
             <div id="toolbar" class="left__toolbar">
-                <p id="open_toolbar_button" class="toolbar__button">
+                <p id="open_toolbar_button" class="toolbar__button" data-translate>
                     Elementy
                 </p>
                 <div id="tools" class="toolbar__tools">
                 </div>
             </div>
             <div class="left__buttons">
+                <button id="lang" class="settings__button lang--button">PL</button>
                 <button id="desktop" class="settings__button"></button>
                 <button id="tablet" class="settings__button"></button>
                 <button id="mobile" class="settings__button"></button>
@@ -399,30 +410,32 @@
         </div>
         <div class="wrapper__right">
             <div class="right__settings--panels">
-                <div data-which_panel="element_settings" id="element_settings--trigger" class="panel__mark">
+                <div data-which_panel="element_settings" id="element_settings--trigger" class="panel__mark"
+                    data-translate>
                     Ustawienia elementu
                 </div>
-                <div data-which_panel="inputs_settings" class="panel__mark">
+                <div data-which_panel="inputs_settings" class="panel__mark" data-translate>
                     Ustawienia inputów
                 </div>
-                <div data-which_panel="row_settings" class="panel__mark">
+                <div data-which_panel="row_settings" class="panel__mark" data-translate>
                     Ustawienia rzędu
                 </div>
-                <div data-which_panel="global_settings" class="panel__mark panel__mark--clicked">
+                <div data-which_panel="global_settings" class="panel__mark panel__mark--clicked" data-translate>
                     Ustawienia popupu
                 </div>
             </div>
             <div class="right__panels">
                 <div id="element_settings" class="panel">
-                    <p class="panel__warning label-null label-element">
+                    <p class="panel__warning label-null label-element" data-translate>
                         Wybierz element do edycji
                     </p>
                     <label class="label label-element label-p label-img">
-                        <span class="label-text label--checkbox">Czy ukryć na urządzeniach mobilnych?</span>
+                        <span class="label-text label--checkbox" data-translate>Czy ukryć na urządzeniach
+                            mobilnych?</span>
                         <input class="input input--element input--checkbox" data-what="hide" type="checkbox">
                     </label>
                     <label class="label label-element label-wrap label-p label-submit">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Paddingi
                         </span>
                         <input class="input input--element input--narrow input--standard" data-what="style"
@@ -436,7 +449,7 @@
                     </label>
                     <label
                         class="label label-element label-wrap label-p label-img label-input label-submit label-checkbox">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Marginesy
                         </span>
                         <input class="input input--element input--narrow input--standard" data-what="style"
@@ -449,36 +462,48 @@
                             data-sufix="px" data-name="marginLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label label-element label-p label-img label-input label-submit label-checkbox">
-                        <span class="label-text">Szerokość</span>
+                        <span class="label-text" data-translate>Szerokość</span>
                         <input data-what="style" data-sufix="px" data-name="width" type="number"
                             class="input input--element input--range input--standard">
                     </label>
                     <label class="label label-element label-p label-img label-input label-submit label-checkbox">
-                        <span class="label-text">Wysokość</span>
+                        <span class="label-text" data-translate>Wysokość</span>
                         <input data-what="style" data-sufix="px" data-name="height" type="number"
                             class="input input--element input--range input--standard">
                     </label>
                     <div class="wysiwyg label-element label-p" id="wysiwyg">
                         <div class="wysiwyg_settings">
-                            <button id="btn_bold" class="wysiwyg_button"></button>
-                            <button id="btn_italic" class="wysiwyg_button"></button>
-                            <button id="btn_strike" class="wysiwyg_button"></button>
-                            <button id="btn_underline" class="wysiwyg_button"></button>
-                            <button id="btn_ordered" class="wysiwyg_button wysiwyg_button--margin-left"></button>
-                            <button id="btn_unordered" class="wysiwyg_button"></button>
+                            <button data-wysiwyg_command="bold" id="btn_bold"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="italic" id="btn_italic"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="strikeThrough" id="btn_strike"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="underline" id="btn_underline"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="insertOrderedList" id="btn_ordered"
+                                class="wysiwyg_button wysiwyg_button--margin-left wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="insertUnorderedList" id="btn_unordered"
+                                class="wysiwyg_button wysiwyg_standard"></button>
                             <button id="btn_href" class="wysiwyg_button wysiwyg_button--margin-left"></button>
 
                             <div class="wrap-break"></div>
 
-                            <button id="btn_justifyleft" class="wysiwyg_button"></button>
-                            <button id="btn_justifycenter" class="wysiwyg_button"></button>
-                            <button id="btn_justifyright" class="wysiwyg_button"></button>
-                            <button id="btn_justifyfull" class="wysiwyg_button"></button>
-                            <button id="btn_indent" class="wysiwyg_button"></button>
-                            <button id="btn_outdent" class="wysiwyg_button"></button>
+                            <button data-wysiwyg_command="justifyLeft" id="btn_justifyleft"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="justifyCenter" id="btn_justifycenter"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="justifyRight" id="btn_justifyright"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="justifyFull" id="btn_justifyfull"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="indent" id="btn_indent"
+                                class="wysiwyg_button wysiwyg_standard"></button>
+                            <button data-wysiwyg_command="outdent" id="btn_outdent"
+                                class="wysiwyg_button wysiwyg_standard"></button>
 
                             <select id="select_fontsize" class="wysiwyg_select wysiwyg_button--margin-left">
-                                <option selected value="none">Rozmiar fontu</option>
+                                <option selected value="none" data-translate>Rozmiar fontu</option>
                                 <option value="8">8px</option>
                                 <option value="9">9px</option>
                                 <option value="10">10px</option>
@@ -500,36 +525,38 @@
                             <button id="btn_color" class="wysiwyg_button"></button>
 
                             <select id="select_fontname" class="wysiwyg_select wysiwyg_button--margin-left">
-                                <option selected value="none">Nazwa fontu</option>
-                                <option value="Arial">Arial</option>
-                                <option value="Verdana">Verdana</option>
-                                <option value="Tahoma">Tahoma</option>
-                                <option value="Impact">Impact</option>
+                                <option selected value="none" data-translate>Nazwa fontu</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Open Sans">Open Sans</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Source Serif Pro">Source Serif Pro</option>
                             </select>
                         </div>
-                        <p class="wysiwyg_content" id="wysiwyg_content">Test</p>
+                        <p class="wysiwyg_content" id="wysiwyg_content"></p>
                     </div>
                     <label class="label label-element label-img">
-                        <span class="label-text">Obrazek w tle</span>
+                        <span class="label-text" data-translate>Obrazek w tle</span>
                         <input class="input input--element input--standard" data-what="attribute"
                             data-editing_sufix="img" data-name="src" type="text">
                     </label>
                     <label class="label label-element label-img">
-                        <span class="label-text">Rozłożenie obrazka</span>
+                        <span class="label-text" data-translate>Rozłożenie obrazka</span>
                         <select class="input input--element input--standard" data-what="style" data-editing_sufix="img"
                             data-name="object-fit">
-                            <option value="fill">Rozciągnij</option>
-                            <option value="contain">Zawrzyj</option>
-                            <option value="cover">Wypełnij</option>
+                            <option value="fill" data-translate>Rozciągnij</option>
+                            <option value="contain" data-translate>Zawrzyj</option>
+                            <option value="cover" data-translate>Wypełnij</option>
                         </select>
                     </label>
                     <label class="label label-element label-input">
-                        <span class="label-text">Rodzaj inputa</span>
+                        <span class="label-text" data-translate>Rodzaj inputa</span>
                         <select class="input input--element input--standard" data-what="attribute" data-name="name">
-                            <option value="sm-form-email">Mail</option>
-                            <option value="sm-form-name">Imię</option>
-                            <option value="sm-form-phone">Telefon</option>
-                            <option value="sm-form-company">Firma</option>
+                            <option value="sm-form-email" data-translate>Mail</option>
+                            <option value="sm-form-name" data-translate>Imię</option>
+                            <option value="sm-form-phone" data-translate>Telefon</option>
+                            <option value="sm-form-company" data-translate>Firma</option>
                         </select>
                     </label>
                     <label class="label label-element label-input">
@@ -538,52 +565,52 @@
                             data-name="placeholder" type="text">
                     </label>
                     <label class="label label-element label-input label-checkbox">
-                        <span class="label-text label--checkbox">Czy pole ma być wymagane?</span>
+                        <span class="label-text label--checkbox" data-translate>Czy pole ma być wymagane?</span>
                         <input class="input input--element input--checkbox" data-what="required" type="checkbox">
                     </label>
                     <label class="label label-element label-submit">
-                        <span class="label-text">Tekst na przycisku</span>
+                        <span class="label-text" data-translate>Tekst na przycisku</span>
                         <input class="input input--element input--standard" data-what="attribute" data-name="value"
                             type="text">
                     </label>
                     <label class="label label-element label-checkbox">
-                        <span class=" label-text">Nazwa zgody</span>
+                        <span class=" label-text" data-translate>Nazwa zgody</span>
                         <input class="input input--element" id="agreement_name" data-what="agreement_name" type="text">
                     </label>
                     <label class="label label-element label-checkbox">
-                        <span class=" label-text">Tekst zgody</span>
+                        <span class=" label-text" data-translate>Tekst zgody</span>
                         <textarea class="input input--element input--textarea" id="agreement_text"
                             data-what="agreement_text"></textarea>
                     </label>
                     <label class="label label-element label-checkbox label-submit">
-                        <span class="label-text">Rozmiar fontu</span>
+                        <span class="label-text" data-translate>Rozmiar fontu</span>
                         <input data-what="style" data-sufix="rem" data-name="fontSize" type="number"
                             class="input input--element input--standard" value="14">
                     </label>
                 </div>
                 <div id="inputs_settings" class="panel">
                     <label class="label">
-                        <span class="label-text">Kolor tła</span>
+                        <span class="label-text" data-translate>Kolor tła</span>
                         <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
                             data-name="backgroundColor" data-jscolor="" value="rgba(255,255,255,1)">
                     </label>
                     <label class="label">
-                        <span class="label-text">Kolor fontu</span>
+                        <span class="label-text" data-translate>Kolor fontu</span>
                         <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
                             data-name="color" data-jscolor="" value="#000000">
                     </label>
                     <label class="label">
-                        <span class="label-text">Rozmiar fontu</span>
+                        <span class="label-text" data-translate>Rozmiar fontu</span>
                         <input data-editing=".input--text" data-what="style" data-sufix="rem" data-name="fontSize"
                             type="number" class="input input--standard" value="14">
                     </label>
                     <label class="label">
-                        <span class="label-text">Kolor fontu placeholdera</span>
+                        <span class="label-text" data-translate>Kolor fontu placeholdera</span>
                         <input class="input input--standard input--color" data-editing="::placeholder" data-what="style"
                             data-name="color" data-jscolor="" value="#8e8e8e">
                     </label>
                     <label class="label label-wrap">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Paddingi
                         </span>
                         <input class="input input--standard input--narrow" data-editing=".input--text" data-what="style"
@@ -596,22 +623,22 @@
                             data-sufix="px" data-name="paddingLeft" type="number" min="0" value="7">
                     </label>
                     <label class="label">
-                        <span class="label-text">Kolor ramki</span>
+                        <span class="label-text" data-translate>Kolor ramki</span>
                         <input class="input input--standard input--color" data-editing=".input--text" data-what="style"
                             data-name="borderColor" data-jscolor="" value="#000000">
                     </label>
                     <label class="label">
-                        <span class="label-text">Grubość ramki</span>
+                        <span class="label-text" data-translate>Grubość ramki</span>
                         <input data-editing=".input--text" data-what="style" data-sufix="px" data-name="borderWidth"
                             type="number" min="0" max="15" class="input input--standard" value="1">
                     </label>
                     <label class="label">
-                        <span class="label-text">Zaokrąglenie ramki</span>
+                        <span class="label-text" data-translate>Zaokrąglenie ramki</span>
                         <input data-editing=".input--text" data-what="style" data-sufix="px" data-name="borderRadius"
                             type="range" min="0" class="input input--standard input--range" value="0">
                     </label>
                     <label class="label">
-                        <span class="label-text">Kolor checkboxa</span>
+                        <span class="label-text" data-translate>Kolor checkboxa</span>
                         <input class="input input--standard input--color"
                             data-editing=".container .checkmark::after, .checkmark" data-what="style"
                             data-name="borderColor" data-jscolor="" value="#000000">
@@ -619,11 +646,11 @@
 
                 </div>
                 <div id="row_settings" class="panel panel--row">
-                    <p class="panel__warning label-null label-element">
+                    <p class="panel__warning label-null label-element" data-translate>
                         Wybierz element do edycji
                     </p>
                     <label class="label label-wrap">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Paddingi
                         </span>
                         <input class="input input--row input--narrow" data-what="style" data-sufix="px"
@@ -636,7 +663,7 @@
                             data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label label-wrap">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Marginesy
                         </span>
                         <input class="input input--row input--narrow" data-what="style" data-sufix="px"
@@ -649,42 +676,56 @@
                             data-name="marginLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label">
-                        <span class="label-text">Wyrównanie w poziomie</span>
+                        <span class="label-text" data-translate>Wyrównanie w poziomie</span>
                         <select class="input input--row" data-what="style" data-name="justify-content">
-                            <option value="flex-start">Do początku</option>
-                            <option value="center">Wyśrodkuj</option>
-                            <option value="flex-end">Do końca</option>
-                            <option value="space-evenly">Wyrównaj</option>
-                            <option value="space-between">Rozłóż</option>
+                            <option value="flex-start" data-translate>Do początku</option>
+                            <option value="center" data-translate>Wyśrodkuj</option>
+                            <option value="flex-end" data-translate>Do końca</option>
+                            <option value="space-evenly" data-translate>Wyrównaj</option>
+                            <option value="space-between" data-translate>Rozłóż</option>
                         </select>
                     </label>
                     <label class="label">
-                        <span class="label-text">Wyrównanie w pionie</span>
+                        <span class="label-text" data-translate>Wyrównanie w pionie</span>
                         <select class="input input--row" data-what="style" data-name="align-items">
-                            <option value="flex-start">Do początku</option>
-                            <option value="center">Wyśrodkuj</option>
-                            <option value="flex-end">Do końca</option>
+                            <option value="flex-start" data-translate>Do początku</option>
+                            <option value="center" data-translate>Wyśrodkuj</option>
+                            <option value="flex-end" data-translate>Do końca</option>
                         </select>
                     </label>
                     <label class="label label-element label-input label-checkbox">
-                        <span class="label-text label--checkbox">Czy ma zachować układ rzędu na mniejszych
+                        <span class="label-text label--checkbox" data-translate>Czy ma zachować układ rzędu na
+                            mniejszych
                             urządzeniach?</span>
                         <input id="row_wrap" class="input input--row input--checkbox" data-what="wrap" type="checkbox">
                     </label>
                 </div>
                 <div id="global_settings" class="panel">
                     <label class="label">
-                        <span class="label-text">Szerokość popupa</span>
+                        <span class="label-text" data-translate>Szerokość popupa</span>
                         <input class="input input--standard" data-editing="#wrapper" data-what="style" data-sufix="px"
                             data-name="maxWidth" type="number" min="280" max="1200" value="600">
                     </label>
                     <label class="label">
-                        <span class="label-text">Wysokość popupa</span>
+                        <span class="label-text" data-translate>Wysokość popupa</span>
                         <input class="input input--standard" data-editing="#wrapper" data-what="style" data-sufix="px"
                             data-name="height" type="number" max="650" min="300" value="600">
                     </label>
+                    <label class="label">
+                        <span class="label-text" data-translate>Nazwa fontu</span>
+                        <select class="input input--standard" data-editing="#wrapper" data-what="style"
+                            data-name="fontFamily">
+                            <option selected value="none" data-translate>Nazwa fontu</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Open Sans" selected>Open Sans</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Merriweather">Merriweather</option>
+                            <option value="Playfair Display">Playfair Display</option>
+                            <option value="Source Serif Pro">Source Serif Pro</option>
+                        </select>
+                    </label>
                     <label class="label label-wrap">
-                        <span class="label-text label-text--wider">
+                        <span class="label-text label-text--wider" data-translate>
                             Paddingi
                         </span>
                         <input class="input input--standard input--narrow" data-editing="#content" data-what="style"
@@ -697,50 +738,50 @@
                             data-sufix="px" data-name="paddingLeft" type="number" min="0" value="0">
                     </label>
                     <label class="label">
-                        <span class="label-text">Wyrównanie w pionie</span>
+                        <span class="label-text" data-translate>Wyrównanie w pionie</span>
                         <select class="input input--standard" data-editing="#content" data-what="style"
                             data-name="justify-content">
-                            <option value="flex-start">Do początku</option>
-                            <option value="center">Wyśrodkuj</option>
-                            <option value="flex-end">Do końca</option>
-                            <option value="space-evenly">Wyrównaj</option>
-                            <option value="space-between">Rozłóż</option>
+                            <option value="flex-start" data-translate>Do początku</option>
+                            <option value="center" data-translate>Wyśrodkuj</option>
+                            <option value="flex-end" data-translate>Do końca</option>
+                            <option value="space-evenly" data-translate>Wyrównaj</option>
+                            <option value="space-between" data-translate>Rozłóż</option>
                         </select>
                     </label>
                     <label class="label">
-                        <span class="label-text">Kolor tła</span>
+                        <span class="label-text" data-translate>Kolor tła</span>
                         <input id="colorPicker1" class="input input--standard input--color"
                             data-editing="#content::before" data-what="style" data-name="backgroundColor">
                     </label>
                     <label class="label">
-                        <span class="label-text">Obrazek w tle</span>
+                        <span class="label-text" data-translate>Obrazek w tle</span>
                         <input class="input input--standard" data-editing="#content::before" data-what="style"
                             data-prefix="url('" data-sufix="')" data-name="backgroundImage" type="text">
                     </label>
                     <label class="label">
-                        <span class="label-text">Wypełnienienie tła</span>
+                        <span class="label-text" data-translate>Wypełnienienie tła</span>
                         <select class="input input--standard" data-editing="#content::before" data-what="style"
                             data-name="backgroundSize">
-                            <option value="auto">Domyślne</option>
-                            <option value="contain">Dopasuj</option>
-                            <option value="cover">Wypełnij</option>
+                            <option value="auto" data-translate>Domyślne</option>
+                            <option value="contain" data-translate>Dopasuj</option>
+                            <option value="cover" data-translate>Wypełnij</option>
                         </select>
                     </label>
                     <label class="label">
-                        <span class="label-text">Rozmycie tła</span>
+                        <span class="label-text" data-translate>Rozmycie tła</span>
                         <input id="bg_blur" type="range" min="0" max="20" class="input input--filter" value="0">
                     </label>
                     <label class="label">
-                        <span class="label-text">Jasność tła</span>
+                        <span class="label-text" data-translate>Jasność tła</span>
                         <input id="bg_brightness" type="range" min="25" max="175" class="input input--filter"
                             value="100">
                     </label>
                     <label class="label">
-                        <span class="label-text">Przeźroczystość tła</span>
+                        <span class="label-text" data-translate>Przeźroczystość tła</span>
                         <input id="bg_opacity" type="range" min="0" max="100" class="input input--filter" value="0">
                     </label>
                     <label class="label">
-                        <span class="label-text">Wyszarzenie tła</span>
+                        <span class="label-text" data-translate>Wyszarzenie tła</span>
                         <input id="bg_grayscale" type="range" min="0" max="100" class="input input--filter" value="0">
                     </label>
                 </div>
@@ -763,7 +804,7 @@
         </div>
     </div>
     <template class="template" id="p" data-text="">
-        <p>Przykładowy tekst</p>
+        <p>Lorem ipsum</p>
     </template>
     <template class="template" id="img" data-text="">
         <div>
@@ -775,7 +816,7 @@
     </template>
     <template class="template" id="checkbox" data-text="">
         <label class="container">
-            <span class="agreement_placeholder">Przykładowy tekst</span>
+            <span class="agreement_placeholder">Lorem ipsum</span>
             <span class="agreement_text">$sm-consent.desc.NAZWA_ZGODY$</span>
             <input type="checkbox" name="$sm-consent.name.NAZWA_ZGODY$">
             <input type="hidden" value="true" name="$sm-consent.id.NAZWA_ZGODY$">
@@ -783,7 +824,7 @@
         </label>
     </template>
     <template class="template" id="submit" data-text="">
-        <input type="submit" class="input--submit" value="Wyślij">
+        <input type="submit" class="input--submit" value="Lorem">
     </template>
     <script src="app.js"></script>
 </body>

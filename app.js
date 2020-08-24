@@ -3,6 +3,7 @@ let settings = {
     width: 600,
     height: 600,
     view: "desktop",
+    lang: "PL"
 }
 const picker1 = new JSColor(document.getElementById("colorPicker1"), {
     'format': 'rgba',
@@ -10,6 +11,31 @@ const picker1 = new JSColor(document.getElementById("colorPicker1"), {
 const picker2 = new JSColor(document.getElementById("input_color"), {
     'format': 'hex',
 })
+const fonts = [{
+        name: 'Roboto',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">'
+    },
+    {
+        name: 'Open Sans',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">'
+    },
+    {
+        name: 'Montserrat',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">'
+    },
+    {
+        name: 'Merriweather',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">'
+    },
+    {
+        name: 'Playfair Display',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">'
+    },
+    {
+        name: 'Source Serif Pro',
+        link: '<link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet">'
+    }
+]
 const get_new_row = () => {
     let div = document.createElement("div")
     div.classList.add("row")
@@ -74,7 +100,6 @@ const add_attribute = (attribute, value, element) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
     shadowRoot.querySelector(element).setAttribute(attribute, value)
 }
-// function to place placeholder based on generated position and values
 const place_placeholder = (placement) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
     let div = shadowRoot.getElementById("placeholder") ? shadowRoot.getElementById("placeholder") : get_placeholder()
@@ -107,7 +132,6 @@ const place_placeholder = (placement) => {
         clean_rows()
     }
 }
-// calculate where item will be placed while moving it
 const calculate_placement = (x, y) => {
     let shadowRoot = document.getElementById("popup").shadowRoot
     let content = shadowRoot.getElementById("content")
@@ -258,7 +282,23 @@ const clean_media = () => {
         }
     }
 }
-// function to drag elements around
+const clean_css = () => {
+    let shadowRoot = document.getElementById("popup").shadowRoot
+    let style = shadowRoot.styleSheets[0]
+    for (let i = 0; i < style.rules.length; i++) {
+        if (style.rules[i].selectorText) {
+            if (style.rules[i].selectorText.indexOf(".") == -1 && style.rules[i].selectorText.indexOf("::") == -1 && style.rules[i].selectorText.indexOf("html") == -1)
+                if (shadowRoot.querySelectorAll(style.rules[i].selectorText).length == 0)
+                    style.deleteRule(i)
+        }
+    }
+}
+const translate = () => {
+    let items = document.querySelectorAll("[data-translate]")
+    for (let i = 0; i < items.length; i++) {
+        items[i].textContent = translations[i][settings.lang]
+    }
+}
 const drag = function (e) {
     if (settings.view == "desktop") {
         let element = this.cloneNode(true);
@@ -377,12 +417,12 @@ const responsivness = (width) => {
         }
     }
     clean_media()
-    if (get_height() > 600) {
+    if (get_height() > settings.height) {
         let elements = []
         for (let element of shadowRoot.querySelectorAll(".row"))
             for (let elem of element.children)
                 elements.push(elem)
-        let diff = get_height() - 600
+        let diff = get_height() - settings.height
         let reduce_padding_top = []
         let reduce_padding_bottom = []
 
@@ -403,8 +443,8 @@ const responsivness = (width) => {
             let new_padding_bottom = temp > responsivness_settings.min_padding ? temp : responsivness_settings.min_padding
             add_to_media("paddingBottom", new_padding_bottom + "px", "#" + element.id, width)
         }
-        if (get_height() > 600) {
-            let diff = get_height() - 600
+        if (get_height() > settings.height) {
+            let diff = get_height() - settings.height
             let reduce_margin_top = []
             let reduce_margin_bottom = []
 
@@ -425,8 +465,8 @@ const responsivness = (width) => {
                 let new_margin_bottom = temp > responsivness_settings.min_margin ? temp : responsivness_settings.min_margin
                 add_to_media("marginBottom", new_margin_bottom + "px", "#" + element.id, width)
             }
-            if (get_height() > 600) {
-                let diff = get_height() - 600
+            if (get_height() > settings.height) {
+                let diff = get_height() - settings.height
                 let padding_top = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingTop"])
                 let padding_bottom = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingBottom"])
                 let padding_left = parseInt(window.getComputedStyle(shadowRoot.querySelector("#content"))["paddingLeft"])
@@ -449,7 +489,7 @@ const responsivness = (width) => {
                     let temp2 = ((padding_bottom - diff) > responsivness_settings.min_padding) ? (padding_bottom - diff) : responsivness_settings.min_padding
                     add_to_media("paddingBottom", temp2 + "px", "#content", width)
                 }
-                if (get_height() > 600) {
+                if (get_height() > settings.height) {
                     let imgs = []
                     for (let element of elements) {
                         if (element.classList.contains("img"))
@@ -461,14 +501,14 @@ const responsivness = (width) => {
                         add_to_media("width", img_width + "px", "#" + element.id, width)
                         add_to_media("height", img_height + "px", "#" + element.id, width)
                     }
-                    if (get_height() > 600) {
+                    if (get_height() > settings.height) {
                         let fontBase = 0.98
-                        while (fontBase > responsivness_settings.min_basefont && get_height() > 600) {
+                        while (fontBase > responsivness_settings.min_basefont && get_height() > settings.height) {
                             add_to_media("fontSize", fontBase + "px", "html", width)
                             document.getElementsByTagName("html")[0].style.fontSize = fontBase + "px"
                             fontBase -= 0.02
                         }
-                        if (get_height() > 600)
+                        if (get_height() > settings.height)
                             return false
                     }
                 }
@@ -534,6 +574,7 @@ const switch_view = (view) => {
     }
 }
 const save_html = () => {
+    clean_css()
     let shadowRoot = document.getElementById("popup").shadowRoot
 
     let textarea = document.getElementById("html_textarea")
@@ -543,8 +584,18 @@ const save_html = () => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>`
+    <title>Document</title>`
+    let font_array = fonts.slice(0, fonts.length)
+    for (let element of shadowRoot.querySelectorAll("*")) {
+        for (let font of font_array) {
+            if (window.getComputedStyle(element)["fontFamily"].indexOf(font.name) != -1) {
+                console.log(font.link)
+                textarea.textContent += font.link
+                font_array.splice(font_array.indexOf(font), 1)
+            }
+        }
+    }
+    textarea.textContent += `<style>`
     for (element of shadowRoot.styleSheets[0].rules)
         textarea.textContent += element.cssText
     textarea.textContent += `</style>
@@ -857,11 +908,20 @@ const initialize = () => {
     document.getElementById("mobile").addEventListener("click", () => {
         switch_view("mobile")
     })
-    document.getElementById("close_modal").addEventListener("click", (e) => {
-        e.target.parentElement.style.display = "none"
-    })
-    document.getElementById("close_modal2").addEventListener("click", (e) => {
-        e.target.parentElement.style.display = "none"
+    for (let element of document.getElementsByClassName("modal_close")) {
+        element.addEventListener("click", (e) => {
+            e.target.parentElement.style.display = "none"
+        })
+    }
+    document.getElementById("lang").addEventListener("click", (e) => {
+        if (e.target.textContent == "PL") {
+            settings.lang = "en"
+            e.target.textContent = "EN"
+        } else {
+            e.target.textContent = "PL"
+            settings.lang = "pl"
+        }
+        translate()
     })
     document.getElementById("save").addEventListener("click", () => {
         let shadowRoot = document.getElementById("popup").shadowRoot
@@ -924,16 +984,6 @@ initialize();
         if (settings.editing.classList.contains("p"))
             settings.editing.innerHTML = wysiwyg.innerHTML
     })
-    document.getElementById("btn_bold").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("bold", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_italic").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("italic", false, true)
-        wysiwyg.focus()
-    })
     document.getElementById("select_fontsize").addEventListener("input", (e) => {
         if (e.target.value != "none") {
             wysiwyg.focus()
@@ -952,36 +1002,6 @@ initialize();
         } else {
             wysiwyg.focus()
         }
-    })
-    document.getElementById("btn_strike").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("strikeThrough", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_underline").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("underline", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_ordered").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("insertOrderedList", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_unordered").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("insertUnorderedList", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_indent").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("indent", false, true)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_outdent").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("outdent", false, true)
-        wysiwyg.focus()
     })
     document.getElementById("btn_color").addEventListener('click', () => {
         wysiwyg.focus()
@@ -1009,24 +1029,11 @@ initialize();
             wysiwyg.focus()
         }
     })
-    document.getElementById("btn_justifyleft").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("justifyLeft", false, null)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_justifycenter").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("justifyCenter", false, null)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_justifyright").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("justifyRight", false, null)
-        wysiwyg.focus()
-    })
-    document.getElementById("btn_justifyfull").addEventListener("click", () => {
-        wysiwyg.focus()
-        document.execCommand("justifyFull", false, null)
-        wysiwyg.focus()
-    })
+    for (let element of document.getElementsByClassName("wysiwyg_standard")) {
+        element.addEventListener("click", (e) => {
+            wysiwyg.focus()
+            document.execCommand(e.target.getAttribute("data-wysiwyg_command"), false, null)
+            wysiwyg.focus()
+        })
+    }
 })();
