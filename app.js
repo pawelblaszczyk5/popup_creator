@@ -342,7 +342,7 @@ const drag = function (e) {
                     item_to_place = item_to_place.children[0]
                     item_to_place.id = what.getAttribute("data-template_id") + "_" + what.getAttribute("data-template_counter")
                     item_to_place.classList.add(what.getAttribute("data-template_id"))
-                    what.setAttribute("data-template_counter", what.getAttribute("data-template-counter") + 1)
+                    what.setAttribute("data-template_counter", parseInt(what.getAttribute("data-template_counter")) + 1)
                     item_to_place.addEventListener("click", function (e) {
                         if (settings.view == "desktop")
                             edit(this)
