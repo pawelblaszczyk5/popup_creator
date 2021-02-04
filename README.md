@@ -1,6 +1,6 @@
 # Popup Creator
 
-This is basic popup creator which I created as a challenge in my work. That were my first steps in modern JS development. The biggest restriction was to fit mobile version in same height as desktop (restriction of system in work). It was used for creating basic mock-ups or as a replacement for old popup creator before new arrived.
+This is simple drag and drop popup creator which I created as a challenge in my work. That were my first steps in modern JS development. The biggest restriction was to fit mobile version in same height as desktop (restriction of system in work). It was used for creating basic mock-ups or as a replacement for old popup creator before new arrived.
 
 ## Live version
 
