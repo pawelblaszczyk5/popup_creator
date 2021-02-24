@@ -6,7 +6,7 @@ This is simple drag and drop popup creator which I created as a challenge in my 
 
 [Popup Creator](https://pawelblaszczyk5.github.io/popup_creator/)  
 
-[![Popup Creator](https://i.imgur.com/wT43aaI.png)](https://www.youtube.com/watch?v=ek1j272iAmc)
+[![Popup Creator](https://i.imgur.com/wT43aaI.png)](https://pawelblaszczyk5.github.io/popup_creator/)
 
 
 ## Run it locally
